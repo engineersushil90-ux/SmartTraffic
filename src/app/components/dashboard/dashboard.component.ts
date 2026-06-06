@@ -1,7 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MapViewComponent } from './map-view.component/map-view.component';
-import { DashboardDataService } from '../../services/dashboard-data.service';
+import { ATCCComponent } from '../atcc/atcc.component';
+import { DashboardDataService, MenuItem } from '../../services/dashboard-data.service';
+import { AtccSection } from '../../services/atcc-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,6 +12,7 @@ import { DashboardDataService } from '../../services/dashboard-data.service';
   imports: [
     CommonModule,
     MapViewComponent,
+    ATCCComponent,
   ],
 })
 export class DashboardComponent {
@@ -36,6 +39,48 @@ export class DashboardComponent {
   readonly deviceHealthMetrics = this.dashboardData.deviceHealthMetrics;
   readonly deviceStatus = this.dashboardData.deviceStatus;
   readonly activities = this.dashboardData.activities;
+
+  activeBody = 'dashboard';
+  activeAtccSection: AtccSection = 'visualization';
+  expandedMenu: string | null = null;
+  activeTopTab = 'Dashboard';
+
+  selectMenu(item: MenuItem): void {
+    if (!item.children?.length) {
+      if (item.route !== undefined) {
+        this.activeBody = item.route;
+      }
+      this.activeTopTab = item.label;
+      this.expandedMenu = null;
+      return;
+    }
+
+    this.expandedMenu = this.expandedMenu === item.label ? null : item.label;
+    this.activeTopTab = item.label;
+  }
+
+  selectLeaf(item: MenuItem): void {
+    if (!item.route) {
+      return;
+    }
+
+    this.activeBody = item.route;
+    this.activeTopTab = 'ATCC';
+
+    if (item.route.startsWith('atcc/')) {
+      const section = item.route.split('/')[1] as AtccSection | undefined;
+      this.activeAtccSection = section ?? 'visualization';
+      this.expandedMenu = 'ATCC';
+    }
+  }
+
+  hasActiveLeaf(item: MenuItem): boolean {
+    if (item.route && item.route === this.activeBody) {
+      return true;
+    }
+
+    return (item.children ?? []).some(child => this.hasActiveLeaf(child));
+  }
 
   toggleSidebar(): void {
     this.isSidebarHidden = !this.isSidebarHidden;

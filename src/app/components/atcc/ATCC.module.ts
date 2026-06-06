@@ -5,10 +5,10 @@ import { MatTableModule } from '@angular/material/table';
 import { ATCCComponent } from './atcc.component';
 
 @NgModule({
-  declarations: [ATCCComponent],
   imports: [
     CommonModule,
-    MatTableModule   // ✅ Add this
-  ]
+    MatTableModule,
+    ATCCComponent,
+  ],
 })
 export class ATCCModule {}

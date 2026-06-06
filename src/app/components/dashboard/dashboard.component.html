@@ -9,9 +9,19 @@
     </div>
 
     <nav class="side-menu">
-      <span class="side-item" *ngFor="let item of sideMenuItems; let first = first" [class.active]="first">
-        <i>{{ item.icon }}</i>{{ item.label }}
-      </span>
+      <ng-container *ngFor="let item of sideMenuItems">
+        <button class="side-item" type="button" [class.active]="hasActiveLeaf(item)" (click)="selectMenu(item)">
+          <i>{{ item.icon }}</i>
+          <span>{{ item.label }}</span>
+          <span *ngIf="item.children?.length" class="expand-icon">{{ expandedMenu === item.label ? '▾' : '▸' }}</span>
+        </button>
+
+        <div class="side-submenu" *ngIf="item.children?.length && expandedMenu === item.label">
+          <button class="sub-item" type="button" *ngFor="let child of item.children" [class.active]="activeBody === child.route" (click)="selectLeaf(child)">
+            <span>{{ child.label }}</span>
+          </button>
+        </div>
+      </ng-container>
     </nav>
   </aside>
 
@@ -24,7 +34,7 @@
         </div>
 
         <nav class="top-nav" aria-label="Primary dashboard navigation">
-          <span class="top-tab" *ngFor="let tab of topTabs; let first = first" [class.active]="first">{{ tab }}</span>
+          <span class="top-tab" *ngFor="let tab of topTabs" [class.active]="activeTopTab === tab">{{ tab }}</span>
         </nav>
 
         <div class="header-actions">
@@ -45,17 +55,22 @@
       </div>
     </header>
 
-    <section class="kpi-grid" aria-label="Traffic summary">
-      <article class="metric-card" *ngFor="let kpi of kpis" [attr.title]="kpi.label + ': ' + kpi.value + (kpi.unit ? ' ' + kpi.unit : '')">
-        <span>{{ kpi.label }}</span>
-        <strong [class.text-value]="kpi.meter">{{ kpi.value }} <small *ngIf="kpi.unit">{{ kpi.unit }}</small></strong>
-        <em *ngIf="kpi.trend" [ngClass]="kpi.state">{{ kpi.trend }}</em>
-        <i *ngIf="kpi.icon" [class]="kpi.icon"></i>
-        <div class="congestion-meter" *ngIf="kpi.meter"><b></b></div>
-      </article>
-    </section>
+    <ng-container *ngIf="activeBody !== '' && activeBody.startsWith('atcc')">
+      <app-atcc [embedded]="true" [section]="activeAtccSection"></app-atcc>
+    </ng-container>
 
-    <section class="main-grid">
+    <ng-container *ngIf="activeBody === '' || activeBody === 'dashboard'">
+      <section class="kpi-grid" aria-label="Traffic summary">
+        <article class="metric-card" *ngFor="let kpi of kpis" [attr.title]="kpi.label + ': ' + kpi.value + (kpi.unit ? ' ' + kpi.unit : '')">
+          <span>{{ kpi.label }}</span>
+          <strong [class.text-value]="kpi.meter">{{ kpi.value }} <small *ngIf="kpi.unit">{{ kpi.unit }}</small></strong>
+          <em *ngIf="kpi.trend" [ngClass]="kpi.state">{{ kpi.trend }}</em>
+          <i *ngIf="kpi.icon" [class]="kpi.icon"></i>
+          <div class="congestion-meter" *ngIf="kpi.meter"><b></b></div>
+        </article>
+      </section>
+
+      <section class="main-grid">
       <article class="panel map-card">
         <div class="panel-head">
           <h2>ATCC - Network Overview</h2>
@@ -175,6 +190,7 @@
         </div>
       </article>
     </section>
+    </ng-container>
 
     <footer class="console-footer">&copy; 2026 SmartTraffic. All rights reserved.</footer>
   </section>

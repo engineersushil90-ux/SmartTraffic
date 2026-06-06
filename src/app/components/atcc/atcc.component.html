@@ -1,12 +1,127 @@
-<table mat-table [dataSource]="intersections" class="mat-elevation-z8">
+<main class="atcc-shell" [class.embedded]="embedded">
+  <aside class="atcc-side" *ngIf="!embedded">
+    <a class="back-link" href="/">-</a>
+    <div class="atcc-menu-head">
+      <span class="car-icon">A</span>
+      <strong>ATCC</strong>
+      <b class="expand-icon">▾</b>
+    </div>
+    <div class="atcc-nav">
+      <button class="sub-item" type="button" *ngFor="let item of subMenu" [class.active]="activeSection === item.id" (click)="setSection(item.id)">
+        <i>{{ item.icon }}</i>
+        <span>{{ item.label }}</span>
+      </button>
 
-  <!-- Delay Column -->
-  <ng-container matColumnDef="delay">
-    <th mat-header-cell *matHeaderCellDef> Delay </th>
-    <td mat-cell *matCellDef="let row"> {{ row.delay }} </td>
-  </ng-container>
+      <div class="inner-menu" *ngIf="sectionSubMenu[activeSection]?.length">
+        <button class="inner-item" type="button" *ngFor="let child of sectionSubMenu[activeSection]" [class.active]="activeSubSection === child.id" (click)="setSubSection(child.id)">
+          <span>{{ child.label }}</span>
+        </button>
+      </div>
+    </div>
+  </aside>
 
-  <!-- Header and Row Declarations -->
-  <tr mat-header-row *matHeaderRowDef="['delay']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['delay'];"></tr>
-</table>
+  <section class="atcc-main">
+    <header class="atcc-top">
+      <div>
+        <h1>ATCC Traffic Data</h1>
+        <p>Automatic traffic count and classification overview</p>
+      </div>
+      <div class="atcc-actions">
+        <span>Last updated: {{ updatedAt }}</span>
+        <button type="button">Refresh</button>
+        <label><input type="checkbox" checked /> Auto-refresh</label>
+      </div>
+    </header>
+
+    <section *ngIf="activeSection === 'visualization'" class="view-space">
+      <div class="atcc-summary">
+        <article class="summary-card" *ngFor="let card of summaryCards" [ngClass]="card.tone">
+          <span>{{ card.label }}</span>
+          <strong>{{ card.value }}</strong>
+          <em>{{ card.meta }}</em>
+          <i>{{ card.icon }}</i>
+        </article>
+      </div>
+
+      <div class="class-grid">
+        <article class="vehicle-card" *ngFor="let vehicle of vehicleClasses | slice:0:8">
+          <i [style.background]="vehicle.color"></i>
+          <span>{{ vehicle.name }}</span>
+          <strong>{{ vehicle.count | number }}</strong>
+          <em>{{ vehicle.percent }}%</em>
+        </article>
+      </div>
+
+      <section class="analytics-grid">
+        <article class="panel class-panel">
+          <div class="panel-head"><h2>Vehicle Class Distribution</h2><a>View All</a></div>
+          <div class="pie-layout">
+            <div class="pie-chart"></div>
+            <ul class="legend-list">
+              <li *ngFor="let vehicle of vehicleClasses"><b [style.background]="vehicle.color"></b>{{ vehicle.name }} ({{ vehicle.percent }}%)</li>
+            </ul>
+            <div class="analysis-box">
+              <h3>Distribution Analysis</h3>
+              <span>Dominant Vehicle Class</span>
+              <strong>Sedan</strong>
+              <small>12.1% of total traffic</small>
+              <span>Total Vehicle Count</span>
+              <strong class="green">{{ totalVehicles | number }}</strong>
+              <small>Across all vehicle classes</small>
+              <span>Diversity Index</span>
+              <strong class="gold">7.1 / 10</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel direction-panel">
+          <div class="panel-head"><h2>Vehicle Class by Direction</h2><a>Comparative View</a></div>
+          <div class="stack-chart">
+            <div class="stack-item" *ngFor="let item of directions" [attr.title]="item.className + ': ' + getDirectionTotal(item)">
+              <strong>{{ getDirectionTotal(item) | number }}</strong>
+              <span class="bar">
+                <i class="east" [style.height.%]="item.east / 21"></i>
+                <i class="north" [style.height.%]="item.north / 21"></i>
+                <i class="south" [style.height.%]="item.south / 21"></i>
+                <i class="west" [style.height.%]="item.west / 21"></i>
+              </span>
+              <em>{{ item.className }}</em>
+            </div>
+          </div>
+        </article>
+      </section>
+    </section>
+
+    <section *ngIf="activeSection === 'table'" class="table-view">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Junction</th><th>Timestamp (IST)</th><th>Vehicle Class</th><th>Direction</th><th>Camera ID</th><th>Lane</th><th>Speed</th><th>Color</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of records">
+              <td>{{ row.id }}</td><td>{{ row.junction }}</td><td>{{ row.timestamp }}</td><td>{{ row.vehicleClass }}</td><td>{{ row.direction }}</td><td>{{ row.cameraId }}</td><td>{{ row.lane }}</td><td>{{ row.speed }}</td><td>{{ row.color }}</td>
+              <td><button>View</button><button>Image</button><button>Clip</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section *ngIf="activeSection === 'reports'" class="reports-grid">
+      <article class="report-card" *ngFor="let report of reports">
+        <h2>{{ report.title }}</h2>
+        <p>{{ report.description }}</p>
+        <div class="report-fields">
+          <label *ngFor="let field of report.fields">{{ field }}<input [value]="field.includes('Date') ? '2026-05-07' : field.includes('Time') ? '00:00:00' : 'All ' + field + 's'" /></label>
+        </div>
+        <div class="export-row">
+          <button *ngFor="let type of report.exports" [ngClass]="type.toLowerCase()">{{ type }}</button>
+        </div>
+        <button class="clear-btn" type="button">Clear Filters</button>
+      </article>
+    </section>
+  </section>
+</main>

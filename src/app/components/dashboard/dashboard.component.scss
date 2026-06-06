@@ -89,6 +89,15 @@
   border-radius: 6px;
   color: #96a3ba;
   font-weight: 700;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.side-item:hover {
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .side-item i {
@@ -112,6 +121,118 @@
 .side-item.active i {
   color: #ffffff;
   background: #5d86de;
+}
+
+.side-submenu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 20px;
+  margin-bottom: 4px;
+}
+
+.side-submenu::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sub-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: #b1b8d6;
+  font-weight: 600;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.sub-item::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8f94b8;
+}
+
+.sub-item i {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: #aab7cf;
+  font-style: normal;
+}
+
+.sub-item.active {
+  color: #ffffff;
+  background: rgba(82, 121, 194, 0.16);
+}
+
+.side-sub-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 18px;
+  margin-top: 2px;
+}
+
+.sub-sub-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 6px;
+  color: #9da0b4;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  position: relative;
+}
+
+.sub-sub-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8f94b8;
+}
+
+.sub-sub-item i {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  color: #aab7cf;
+  font-style: normal;
+}
+
+.sub-sub-item.active {
+  color: #ffffff;
+  background: rgba(82, 121, 194, 0.12);
+}
+
+.expand-icon {
+  margin-left: auto;
+  color: #96a3ba;
 }
 
 .panel,

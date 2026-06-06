@@ -5,6 +5,8 @@ export type TrendState = 'up' | 'down' | 'moderate' | '';
 export interface MenuItem {
   icon: string;
   label: string;
+  route?: string;
+  children?: MenuItem[];
 }
 
 export interface KpiCard {
@@ -109,20 +111,28 @@ export class DashboardDataService {
       },
       navigation: {
         sideMenuItems: [
-          { icon: 'H', label: 'Dashboard' },
-          { icon: 'A', label: 'ATCC' },
-          { icon: 'V', label: 'VIDS' },
-          { icon: 'M', label: 'VMS' },
-          { icon: 'W', label: 'MET' },
-          { icon: 'S', label: 'VSDS' },
-          { icon: 'I', label: 'Incidents' },
-          { icon: '!', label: 'Alerts' },
-          { icon: 'T', label: 'Traffic Explorer' },
-          { icon: 'G', label: 'Trend Analytics' },
-          { icon: 'C', label: 'Device Management' },
-          { icon: 'S', label: 'System Health' },
-          { icon: 'U', label: 'User Management' },
-          { icon: 'L', label: 'Audit Logs' },
+          { icon: '', label: 'Dashboard', route: 'dashboard' },
+          {
+            icon: '',
+            label: 'ATCC',
+            children: [
+              { icon: '', label: 'Visualization', route: 'atcc/visualization' },
+              { icon: '', label: 'Table', route: 'atcc/table' },
+              { icon: '', label: 'Reports', route: 'atcc/reports' },
+            ],
+          },
+          { icon: '', label: 'VIDS', route: 'vids' },
+          { icon: '', label: 'VMS' },
+          { icon: '', label: 'MET' },
+          { icon: '', label: 'VSDS' },
+          { icon: '', label: 'Incidents' },
+          { icon: '', label: 'Alerts' },
+          { icon: '', label: 'Traffic Explorer' },
+          { icon: '', label: 'Trend Analytics' },
+          { icon: '', label: 'Device Management' },
+          { icon: '', label: 'System Health' },
+          { icon: '', label: 'User Management' },
+          { icon: '', label: 'Audit Logs' },
         ],
         topTabs: ['Dashboard', 'ATCC', 'VIDS', 'VMS', 'MET', 'VSDS', 'Reports', 'Analytics', 'Settings'],
       },

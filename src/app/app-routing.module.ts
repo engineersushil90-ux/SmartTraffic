@@ -12,6 +12,7 @@ import { DeviceStatusOverviewComponent } from './components/device-status-overvi
 const routes: Routes = [
   { path: '', component: DashboardComponent },          // default route
   { path: 'atcc', component: ATCCComponent },
+  { path: 'atcc/:section', component: ATCCComponent },
   { path: 'vids', component: VIDSComponent },
   { path: 'speed-violation', component: SpeedViolationComponent },
   { path: 'device-map', component: DeviceStatusMapComponent },
