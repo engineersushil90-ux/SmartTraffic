@@ -722,6 +722,7 @@ h2 {
 .met-card {
   grid-column: 10 / 13;
   grid-row: 3;
+  position: relative;
 }
 
 .vds-card {
@@ -858,26 +859,36 @@ time {
 
 .weather-summary {
   display: grid;
-  grid-template-columns: 48px auto;
+  grid-template-columns: 1fr;
   align-items: center;
   gap: 10px;
-  margin-bottom: 6px;
+  margin: 16px 0 10px;
+  padding-right: 96px;
 }
 
 .weather-summary .weather-icon {
-  position: relative;
-  right: auto;
-  bottom: auto;
+  position: absolute;
+  top: 52px;
+  right: 26px;
+  width: 64px;
+  height: 34px;
+}
+
+.weather-summary .weather-icon::before {
+  top: -12px;
+  right: 2px;
+  width: 28px;
+  height: 28px;
+  box-shadow: 0 0 0 7px rgba(241, 189, 66, 0.14);
 }
 
 .weather-summary strong {
   display: block;
   color: #ffffff;
-  font-size: 1.08rem;
+  font-size: 1.35rem;
 }
 
 .weather-summary span {
-  grid-column: 2;
   color: #b4c0d1;
   font-weight: 700;
 }
