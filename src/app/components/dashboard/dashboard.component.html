@@ -144,7 +144,9 @@
       <article class="panel health-card">
         <div class="panel-head"><h2>Device Status by Category</h2><a>View All</a></div>
         <div class="device-status-summary">
-          <span *ngFor="let item of deviceSummary"><em>{{ item[0] }}</em><strong>{{ item[1] }}</strong></span>
+          <span *ngFor="let item of deviceSummary">
+            <em><b *ngIf="item[0] !== 'Total Device'" [class.smooth]="item[0] === 'Connected'" [class.red]="item[0] === 'Disconnected'" style="display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;"></b>{{ item[0] }}</em><strong>{{ item[1] }}</strong>
+          </span>
         </div>
         <div class="device-status-chart" aria-label="Device status by category">
           <div class="device-bars">
