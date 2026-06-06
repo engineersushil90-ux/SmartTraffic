@@ -10,7 +10,7 @@
 
     <nav class="side-menu">
       <span class="side-item" *ngFor="let item of sideMenuItems; let first = first" [class.active]="first">
-        <i>{{ item[0] }}</i>{{ item[1] }}
+        <i>{{ item.icon }}</i>{{ item.label }}
       </span>
     </nav>
   </aside>
@@ -29,7 +29,7 @@
 
         <div class="header-actions">
           <button class="side-toggle" type="button" [attr.aria-label]="isSidebarHidden ? 'Show side menu' : 'Hide side menu'" [attr.aria-expanded]="!isSidebarHidden" (click)="toggleSidebar()">&#9776;</button>
-          <div class="clock">Tue, Apr 24 | 10:45 AM</div>
+          <div class="clock">{{ clock }}</div>
           <button class="theme-toggle" type="button" aria-label="Toggle theme" (click)="toggleTheme()">
             <span class="theme-moon" [class.sun]="isLightTheme"></span>
             <span class="theme-track"><span></span></span>
@@ -70,7 +70,7 @@
           <span class="map-pin three"></span>
         </div>
         <div class="map-legend">
-          <span *ngFor="let item of mapLegend"><b [class]="item[0]"></b>{{ item[1] }}</span>
+          <span *ngFor="let item of mapLegend"><b [class]="item.className"></b>{{ item.label }}</span>
         </div>
       </article>
 
@@ -112,7 +112,7 @@
           <span>Partly Cloudy</span>
         </div>
         <dl>
-          <div *ngFor="let stat of weatherStats" [attr.title]="stat[0] + ': ' + stat[1]"><dt>{{ stat[0] }}</dt><dd>{{ stat[1] }}</dd></div>
+          <div *ngFor="let stat of weatherStats" [attr.title]="stat.label + ': ' + stat.value"><dt>{{ stat.label }}</dt><dd>{{ stat.value }}</dd></div>
         </dl>
       </article>
 
@@ -122,7 +122,7 @@
           <div class="vsds-kpi" *ngFor="let metric of vsdsMetrics" [attr.title]="metric.label + ': ' + metric.value + ' - ' + metric.trend">
             <span>{{ metric.label }}</span>
             <strong>{{ metric.value }}</strong>
-            <em [ngClass]="metric.state">{{ metric.state === 'up' ? '↑ ' : metric.state === 'down' ? '↓ ' : '' }}{{ metric.trend }}</em>
+            <em [ngClass]="metric.state"><span *ngIf="metric.state === 'up'">&uarr; </span><span *ngIf="metric.state === 'down'">&darr; </span>{{ metric.trend }}</em>
           </div>
         </div>
       </article>
@@ -145,7 +145,7 @@
         <div class="panel-head"><h2>Device Status by Category</h2><a>View All</a></div>
         <div class="device-status-summary">
           <span *ngFor="let item of deviceSummary">
-            <em><b *ngIf="item[0] !== 'Total Device'" [class.smooth]="item[0] === 'Connected'" [class.red]="item[0] === 'Disconnected'" style="display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;"></b>{{ item[0] }}</em><strong>{{ item[1] }}</strong>
+            <em><b *ngIf="item.label !== 'Total Device'" [class.smooth]="item.label === 'Connected'" [class.red]="item.label === 'Disconnected'" style="display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;"></b>{{ item.label }}</em><strong>{{ item.value }}</strong>
           </span>
         </div>
         <div class="device-status-chart" aria-label="Device status by category">
@@ -171,7 +171,7 @@
       <article class="panel activity-card">
         <div class="panel-head"><h2>Recent Activities</h2><a>View All</a></div>
         <div class="activity-scroll">
-          <p *ngFor="let activity of activities" [attr.title]="activity[1]"><time>{{ activity[0] }}</time>{{ activity[1] }}</p>
+          <p *ngFor="let activity of activities" [attr.title]="activity.text"><time>{{ activity.time }}</time>{{ activity.text }}</p>
         </div>
       </article>
     </section>
