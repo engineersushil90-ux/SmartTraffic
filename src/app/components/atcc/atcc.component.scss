@@ -4,6 +4,8 @@
   color: #e8edf7;
   font-family: Inter, Roboto, Arial, sans-serif;
   background: #0f1723;
+  border: none;
+  box-shadow: none;
 }
 
 :host-context(.light-theme) {
@@ -37,21 +39,13 @@
 .report-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
-  background: rgba(15, 25, 45, 0.92);
+  background: rgba(28, 47, 74, 0.72);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(12px);
 }
 
 .summary-card {
-  backdrop-filter: blur(10px);
-}
-
-.vehicle-card {
-  backdrop-filter: blur(10px);
-}
-
-.panel,
-.report-card {
-  backdrop-filter: blur(12px);
+  background: rgba(28, 47, 74, 0.72);
 }
 
 .legend-list li {
@@ -60,7 +54,8 @@
 }
 
 .analysis-box {
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: none;
+  padding-left: 0;
 }
 
 .table-wrap {
@@ -72,9 +67,56 @@
 :host-context(.light-theme) .vehicle-card,
 :host-context(.light-theme) .panel,
 :host-context(.light-theme) .report-card {
-  border: 1px solid #e5e8ee;
+  border: 1px solid #e5e7ee;
   background: #ffffff;
-  box-shadow: 0 4px 14px rgba(24, 32, 51, 0.08);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+}
+
+:host-context(.light-theme) .summary-card.blue,
+:host-context(.light-theme) .summary-card.red,
+:host-context(.light-theme) .summary-card.indigo,
+:host-context(.light-theme) .summary-card.yellow {
+  background: #ffffff;
+}
+
+:host-context(.light-theme) .summary-card span,
+:host-context(.light-theme) .vehicle-card span,
+:host-context(.light-theme) .panel h2,
+:host-context(.light-theme) .report-card h2 {
+  color: #1f2937;
+}
+
+:host-context(.light-theme) .summary-card strong,
+:host-context(.light-theme) .vehicle-card strong,
+:host-context(.light-theme) .report-card p,
+:host-context(.light-theme) .report-fields label,
+:host-context(.light-theme) .table-wrap th,
+:host-context(.light-theme) .table-wrap td {
+  color: #111827;
+}
+
+:host-context(.light-theme) .report-card h2 {
+  background: #111827;
+  color: #ffffff;
+}
+
+:host-context(.light-theme) .report-card p {
+  color: #4b5563;
+}
+
+:host-context(.light-theme) .report-fields input {
+  background: #f8fafc;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+:host-context(.light-theme) .export-row .excel { background: #74c283; color: #ffffff; }
+:host-context(.light-theme) .export-row .csv { background: #5b9ed6; color: #ffffff; }
+
+:host-context(.light-theme) .clear-btn {
+  border: 1px solid #3b82f6;
+  background: #ffffff;
+  color: #4338ca;
 }
 
 :host-context(.light-theme) .legend-list li {
@@ -87,22 +129,47 @@
 }
 
 :host-context(.light-theme) .table-wrap {
+  background: #f7f9fc;
+  border-color: #dfe3ea;
+}
+
+:host-context(.light-theme) .table-wrap table {
   background: #ffffff;
+}
+
+:host-context(.light-theme) .table-wrap th,
+:host-context(.light-theme) .table-wrap td {
   border-color: #e5e8ee;
+  color: #1f2937;
+}
+
+:host-context(.light-theme) .table-wrap th {
+  background: #f3f6fb;
+}
+
+:host-context(.light-theme) .table-wrap td {
+  background: #ffffff;
+}
+
+:host-context(.light-theme) .table-wrap tbody tr:nth-child(even) td {
+  background: #f7f9fc;
 }
 
 .atcc-shell {
   display: grid;
   grid-template-columns: 232px minmax(0, 1fr);
   min-height: 100vh;
+  border: none;
+  background: transparent;
 }
 
 .atcc-shell.embedded {
   grid-template-columns: minmax(0, 1fr);
+  min-height: auto;
 }
 
 .atcc-shell.embedded .atcc-main {
-  padding: 24px 18px 32px;
+  padding: 24px 18px 18px;
 }
 
 .atcc-side {
@@ -361,22 +428,40 @@ h1 {
 .vehicle-card,
 .panel,
 .report-card {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  background: rgba(15, 25, 45, 0.92);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 22px;
+  background: rgba(15, 24, 39, 0.95);
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(12px);
 }
 
 .summary-card {
   position: relative;
   min-height: 126px;
   padding: 20px;
+  background: linear-gradient(180deg, rgba(13, 29, 66, 0.95), rgba(8, 15, 35, 0.96));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vehicle-card,
+.panel,
+.report-card {
+  background: linear-gradient(180deg, rgba(10, 18, 34, 0.96), rgba(16, 24, 42, 0.94));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.vehicle-card {
+  padding: 18px 16px;
+}
+
+.panel,
+.report-card {
+  padding: 20px;
 }
 
 .summary-card span,
 .vehicle-card span {
-  color: #626a7f;
+  color: #9bb3ff;
   font-size: 0.78rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -385,20 +470,21 @@ h1 {
 .summary-card strong {
   display: block;
   margin-top: 22px;
-  font-size: 1.45rem;
+  font-size: 1.5rem;
+  color: #f8fbff;
 }
 
 .summary-card em,
 .vehicle-card em {
   display: inline-block;
   margin-top: 14px;
-  padding: 4px 7px;
-  border-radius: 5px;
-  background: #eef0ff;
-  color: #4d5cc7;
-  font-size: 0.68rem;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #c9d4ff;
+  font-size: 0.72rem;
   font-style: normal;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .summary-card i {
@@ -409,10 +495,26 @@ h1 {
   width: 56px;
   height: 56px;
   place-items: center;
-  border-radius: 8px;
-  background: #eef0ff;
-  color: #4f5fc9;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #dbe2ff;
   font-style: normal;
+}
+
+.summary-card.blue {
+  background: linear-gradient(180deg, rgba(19, 40, 89, 0.98), rgba(9, 17, 40, 0.98));
+}
+
+.summary-card.red {
+  background: linear-gradient(180deg, rgba(104, 36, 62, 0.92), rgba(44, 18, 39, 0.96));
+}
+
+.summary-card.indigo {
+  background: linear-gradient(180deg, rgba(45, 47, 94, 0.96), rgba(13, 19, 47, 0.96));
+}
+
+.summary-card.yellow {
+  background: linear-gradient(180deg, rgba(97, 76, 29, 0.94), rgba(52, 39, 21, 0.98));
 }
 
 .summary-card.red i { background: #fbebeb; color: #d45b58; }
@@ -435,8 +537,10 @@ h1 {
   grid-row: span 3;
   width: 48px;
   height: 48px;
-  border-radius: 8px;
-  opacity: 0.22;
+  border-radius: 12px;
+  background: currentColor;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .vehicle-card strong {
@@ -472,51 +576,54 @@ h1 {
 
 .pie-layout {
   display: grid;
-  grid-template-columns: 220px minmax(200px, 1fr) 220px;
+  grid-template-columns: 250px minmax(250px, 1fr);
   gap: 18px;
   align-items: start;
 }
 
-.legend-list {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  width: 100%;
-  transition: opacity 0.2s ease;
-}
-
-.legend-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: #f4f6fb;
-  color: #2f3a57;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.legend-list li span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.legend-list b {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
 .pie-chart {
+  position: relative;
   width: 220px;
   aspect-ratio: 1;
   border-radius: 50%;
   background: conic-gradient(#4f5fc9 0 12.1%, #d8ad48 12.1% 24.1%, #6caf79 24.1% 36%, #db9b45 36% 47.9%, #5a66cd 47.9% 59.7%, #5d85d8 59.7% 71.5%, #df8f8c 71.5% 83%, #67a973 83% 93.7%, #3e4c9f 93.7% 98.7%, #444ca2 98.7%);
+}
+
+.pie-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  pointer-events: auto;
+  white-space: nowrap;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.56);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.pie-label:hover {
+  color: #ffffff;
+}
+
+.pie-label:hover::after {
+  content: attr(data-name);
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(16, 24, 40, 0.95);
+  color: #f8fbff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.2);
+  z-index: 2;
 }
 
 .legend-list {
@@ -560,12 +667,15 @@ h1 {
 
 .stack-chart {
   display: grid;
-  grid-template-columns: repeat(12, minmax(46px, 1fr));
+  grid-template-columns: repeat(12, 60px);
   align-items: end;
   min-height: 318px;
   gap: 10px;
   padding: 16px 0 0;
   border-bottom: 1px solid #dfe3ea;
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
 }
 
 .stack-item {
@@ -606,30 +716,43 @@ h1 {
 
 .table-wrap {
   overflow-x: auto;
-  border: 1px solid #dfe3ea;
-  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 47, 74, 0.72);
+  backdrop-filter: blur(10px);
 }
 
 table {
   width: 100%;
   min-width: 1320px;
   border-collapse: collapse;
+  background: transparent;
 }
 
 th,
 td {
   padding: 18px;
-  border: 1px solid #e5e8ee;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   text-align: left;
 }
 
 th {
-  background: #f0f2f6;
+  background: rgba(255, 255, 255, 0.08);
+  color: #edf2ff;
   font-size: 1rem;
 }
 
 td {
   font-size: 0.96rem;
+  color: #d8e1ff;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 td button {
@@ -650,13 +773,13 @@ td button {
   margin: -18px -18px 16px;
   padding: 14px 18px;
   border-radius: 8px 8px 0 0;
-  background: #202428;
+  background: rgba(10, 18, 34, 0.96);
   color: #ffffff;
 }
 
 .report-card p {
   margin-bottom: 16px;
-  color: #858b9d;
+  color: #b8c3dd;
 }
 
 .report-fields {
@@ -665,18 +788,20 @@ td button {
   gap: 12px;
 }
 
-label {
-  color: #1e2536;
+.report-fields label {
+  color: #cbd1ea;
   font-weight: 800;
 }
 
-input {
+.report-fields input {
   display: block;
   width: 100%;
   margin-top: 6px;
   padding: 9px;
-  border: 1px solid #d3d8e2;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f4f7ff;
 }
 
 .export-row {
@@ -697,9 +822,9 @@ input {
 .clear-btn {
   width: 100%;
   margin-top: 12px;
-  border: 1px solid #6f8cff;
-  background: #ffffff;
-  color: #5b6fe8;
+  border: 1px solid rgba(111, 140, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  color: #b4c3ff;
 }
 
 @media (max-width: 1200px) {

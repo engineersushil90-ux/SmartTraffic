@@ -56,13 +56,11 @@
         <article class="panel class-panel">
           <div class="panel-head"><h2>Vehicle Class Distribution</h2><a>View All</a></div>
           <div class="pie-layout">
-            <div class="pie-chart"></div>
-            <ul class="legend-list">
-              <li *ngFor="let vehicle of vehicleClasses">
-                <span><b [style.background]="vehicle.color"></b>{{ vehicle.name }}</span>
-                <strong>{{ vehicle.percent }}%</strong>
-              </li>
-            </ul>
+            <div class="pie-chart">
+              <span class="pie-label" *ngFor="let slice of pieSlices" [style.left]="slice.left" [style.top]="slice.top" [style.background]="slice.bg" [attr.data-name]="slice.name" [attr.title]="slice.name + ' ' + slice.percent + '%'">
+                {{ slice.percent }}%
+              </span>
+            </div>
             <div class="analysis-box">
               <h3>Distribution Analysis</h3>
               <span>Dominant Vehicle Class</span>

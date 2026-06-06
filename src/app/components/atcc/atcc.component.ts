@@ -25,6 +25,7 @@ export class ATCCComponent implements OnInit, OnChanges {
   readonly records = this.atccData.records;
   readonly reports = this.atccData.reports;
   readonly totalVehicles = this.vehicleClasses.reduce((sum, item) => sum + item.count, 0);
+  readonly pieSlices = this.buildPieSlices(this.vehicleClasses);
   activeSection: AtccSection = 'visualization';
 
   readonly subMenu: Array<{ id: AtccSection; label: string; icon: string }> = [
@@ -91,5 +92,35 @@ export class ATCCComponent implements OnInit, OnChanges {
 
   getDirectionTotal(item: { east: number; north: number; south: number; west: number }): number {
     return item.east + item.north + item.south + item.west;
+  }
+
+  private buildPieSlices(items: Array<{ name: string; count: number; percent: number; color: string }>) {
+    let startAngle = 0;
+    return items.map(item => {
+      const midAngle = startAngle + item.percent * 1.8;
+      const angleRad = (midAngle - 90) * Math.PI / 180;
+      const radius = 0.62;
+      const labelLeft = 50 + Math.cos(angleRad) * radius * 50;
+      const labelTop = 50 + Math.sin(angleRad) * radius * 50;
+      const slice = {
+        name: item.name,
+        percent: item.percent,
+        color: item.color,
+        bg: this.hexToRgba(item.color, 0.82),
+        left: `${labelLeft}%`,
+        top: `${labelTop}%`,
+      };
+      startAngle += item.percent * 3.6;
+      return slice;
+    });
+  }
+
+  private hexToRgba(hex: string, alpha = 1) {
+    const sanitized = hex.replace('#', '');
+    const bigint = parseInt(sanitized, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 }
