@@ -548,7 +548,7 @@ h1 {
 }
 
 .analytics-grid {
-  grid-template-columns: 0.86fr 1.14fr;
+  grid-template-columns: 1fr;
   margin-top: 14px;
 }
 
@@ -667,14 +667,14 @@ h1 {
 
 .stack-chart {
   display: grid;
-  grid-template-columns: repeat(12, 60px);
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   align-items: end;
   min-height: 318px;
   gap: 10px;
   padding: 16px 0 0;
   border-bottom: 1px solid #dfe3ea;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow-x: visible;
+  overflow-y: visible;
   width: 100%;
 }
 
