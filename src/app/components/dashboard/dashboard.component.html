@@ -157,6 +157,15 @@
         </div>
       </article>
 
+      <article class="panel system-card">
+        <div class="panel-head"><h2>System Health &amp; Performance</h2><a>View All</a></div>
+        <div class="device-health-rings">
+          <span *ngFor="let metric of deviceHealthMetrics" [style.--value]="metric.value" [attr.title]="metric.label + ': ' + metric.value + '%'">
+            <b class="health-ring"><strong>{{ metric.value }}%</strong><em>{{ metric.label }}</em></b>
+          </span>
+        </div>
+      </article>
+
       <article class="panel activity-card">
         <div class="panel-head"><h2>Recent Activities</h2><a>View All</a></div>
         <div class="activity-scroll">

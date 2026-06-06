@@ -68,6 +68,13 @@ export class DashboardComponent {
   readonly deviceSummary = [
     ['Total Device', '85'], ['Connected', '66'], ['Disconnected', '19'],
   ];
+  readonly deviceHealthMetrics = [
+    { label: 'Device Health', value: 92 },
+    { label: 'Road Occupancy', value: 24 },
+    { label: 'Compliance Rate', value: 88 },
+    { label: 'Camera Availability', value: 97 },
+    { label: 'Network Connectivity', value: 99 },
+  ];
   readonly deviceStatus = [
     { name: 'ATCC', online: 0, offline: 6 }, { name: 'ECB-GSM', online: 28, offline: 0 },
     { name: 'ECB-SYS', online: 0, offline: 1 }, { name: 'Main', online: 1, offline: 0 },

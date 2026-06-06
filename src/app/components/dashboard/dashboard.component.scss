@@ -150,7 +150,7 @@ h2 {
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 10px 12px 8px;
+  padding: 10px 12px 42px;
 }
 
 .console-header {
@@ -523,12 +523,12 @@ h2 {
 .main-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: minmax(250px, 1.04fr) minmax(220px, 0.98fr) minmax(190px, 0.74fr);
+  grid-template-rows: minmax(250px, 1.04fr) minmax(220px, 0.98fr) minmax(250px, 0.9fr) minmax(260px, 1fr);
   gap: 9px;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 4px;
+  padding: 0 4px 48px 0;
 }
 
 .panel {
@@ -1070,6 +1070,11 @@ dd {
   grid-row: 3;
 }
 
+.system-card {
+  grid-column: 1 / 13;
+  grid-row: 4;
+}
+
 .activity-card {
   grid-column: 7 / 10;
   grid-row: 3;
@@ -1094,6 +1099,48 @@ dd {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
   margin-bottom: 6px;
+}
+
+.device-health-rings {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  min-height: 0;
+}
+
+.device-health-rings span {
+  display: grid;
+  place-items: center;
+  min-height: 170px;
+  border: 1px solid rgba(119, 146, 201, 0.16);
+  border-radius: 7px;
+  background: rgba(28, 47, 74, 0.32);
+  text-align: center;
+}
+
+.health-ring {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  width: 138px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #152740 0 55%, transparent 56%), conic-gradient(#82c853 0 calc(var(--value) * 1%), #293b55 0);
+}
+
+.device-health-rings strong {
+  color: #ffffff;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.device-health-rings em {
+  color: #aeb8ca;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 800;
+  max-width: 94px;
 }
 
 .device-status-summary span {
@@ -1261,10 +1308,22 @@ dd {
 }
 
 .console-footer {
-  padding: 8px 0 0;
-  color: #6d798d;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 232px;
+  z-index: 5;
+  min-height: 34px;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(119, 146, 201, 0.22);
+  background: rgba(7, 20, 33, 0.96);
+  color: #aeb8ca;
   font-weight: 700;
   text-align: center;
+}
+
+.side-hidden .console-footer {
+  left: 0;
 }
 
 .light-theme {
@@ -1331,9 +1390,31 @@ dd {
   color: #24304a;
 }
 
+.light-theme .device-health-rings span {
+  border-color: rgba(125, 142, 169, 0.2);
+  background: #ffffff;
+}
+
+.light-theme .health-ring {
+  background: radial-gradient(circle, #f5f8fc 0 55%, transparent 56%), conic-gradient(#6fbf62 0 calc(var(--value) * 1%), #d8e0eb 0);
+}
+
+.light-theme .device-health-rings strong {
+  color: #24304a;
+}
+
+.light-theme .device-health-rings em {
+  color: #5e6b80;
+}
+
 .light-theme .side-item.active,
 .light-theme .top-tab.active {
   color: #355fb5;
+}
+
+.light-theme .console-footer {
+  background: rgba(237, 242, 248, 0.96);
+  color: #5e6b80;
 }
 
 @media (max-width: 1500px) {
@@ -1349,6 +1430,10 @@ dd {
 
   .side-rail {
     display: none;
+  }
+
+  .console-footer {
+    left: 0;
   }
 
   .mobile-logo {
@@ -1379,6 +1464,7 @@ dd {
   .main-grid,
   .video-grid,
   .vsds-kpis,
+  .device-health-rings,
   .ring-row,
   .incident-body {
     grid-template-columns: 1fr;
@@ -1397,6 +1483,7 @@ dd {
   .vds-card,
   .incident-card,
   .health-card,
+  .system-card,
   .activity-card {
     grid-column: 1;
     grid-row: auto;
