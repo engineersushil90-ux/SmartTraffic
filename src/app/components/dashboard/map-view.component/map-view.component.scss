@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+
+#map {
+  width: 100%;
+  height: clamp(360px, 48vh, 560px);
+  min-height: 360px;
+  background: #dfe8ef;
+}

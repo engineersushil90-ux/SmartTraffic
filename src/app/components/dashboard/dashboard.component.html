@@ -1,0 +1,186 @@
+<main class="atms-dashboard">
+  <nav class="topbar" aria-label="ATMS navigation">
+    <div class="brand">
+      <div class="brand-mark">ST</div>
+      <span>SmartTraffic</span>
+    </div>
+
+    <div class="nav-tabs">
+      <span class="nav-tab active">Dashboard</span>
+      <span class="nav-tab">ATCC</span>
+      <span class="nav-tab">VIDS</span>
+      <span class="nav-tab">VSDS</span>
+      <span class="nav-tab">VMS</span>
+      <span class="nav-tab">MET</span>
+      <span class="nav-tab">Hardware</span>
+    </div>
+
+    <div class="clock">Tue, Apr 24 | 10:45 AM</div>
+  </nav>
+
+  <section class="kpi-strip" aria-label="Traffic summary">
+    <article class="kpi-card">
+      <span>Average Speed</span>
+      <strong>29 <small>mph</small></strong>
+      <b class="warning">!</b>
+    </article>
+    <article class="kpi-card success">
+      <span>Traffic Volume</span>
+      <strong>36,200 <small>per hour</small></strong>
+    </article>
+    <article class="kpi-card">
+      <span>Active Alerts</span>
+      <strong>5 <small>Active Alerts</small></strong>
+    </article>
+    <article class="kpi-card hot">
+      <span>Travel Time Index</span>
+      <strong>2.6 <small>Congestion</small></strong>
+    </article>
+    <article class="kpi-card">
+      <span>Travel Time Lanes</span>
+      <div class="lane-dots">
+        <i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </article>
+  </section>
+
+  <section class="dashboard-grid">
+    <aside class="left-stack">
+      <article class="panel congestion-panel">
+        <h2>Congestion Stats</h2>
+        <div class="metric-row">
+          <div class="icon-ring">↗</div>
+          <div>
+            <strong>16</strong>
+            <span>Congested Roads</span>
+          </div>
+          <div class="legend">
+            <span><b class="pink"></b>Closed</span>
+            <span><b class="orange"></b>Close</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel compact-list">
+        <h2>E-Challan</h2>
+        <div class="two-stat">
+          <span><strong>510</strong> Paid</span>
+          <span><strong>215</strong> Pending</span>
+        </div>
+      </article>
+
+      <article class="panel compact-list">
+        <h2>Accidents</h2>
+        <div class="two-stat">
+          <span><strong>72</strong> Recently</span>
+          <span><strong>75</strong> Pending</span>
+        </div>
+      </article>
+
+      <article class="panel chart-panel">
+        <h2>Hardware Trends</h2>
+        <div class="bar-chart" aria-label="Hardware trend chart">
+          <i style="--h: 76%"></i>
+          <i style="--h: 52%"></i>
+          <i style="--h: 38%"></i>
+          <i style="--h: 46%"></i>
+          <i style="--h: 64%"></i>
+          <i style="--h: 42%"></i>
+          <i style="--h: 34%"></i>
+          <i style="--h: 24%"></i>
+        </div>
+      </article>
+    </aside>
+
+    <section class="main-stack">
+      <article class="panel map-panel">
+        <app-map-view></app-map-view>
+        <div class="map-alert one">1</div>
+        <div class="map-alert two">98</div>
+        <div class="map-alert three">1</div>
+      </article>
+
+      <section class="bottom-panels">
+        <article class="panel hardware-panel">
+          <h2>Hardware Status</h2>
+          <div class="hardware-body">
+            <div class="donut">
+              <strong>3,385</strong>
+              <span>Connected</span>
+              <small>98.7%</small>
+            </div>
+            <div class="device-list">
+              <span><strong>2310</strong> CCTV Cameras</span>
+              <span><strong>515</strong> ANPR Cameras</span>
+              <span><strong>980</strong> Speed Detectors</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel hardware-panel">
+          <h2>Perceptors</h2>
+          <div class="hardware-body">
+            <div class="donut cool">
+              <strong>13%</strong>
+              <span>Disconnected</span>
+              <small>98.7%</small>
+            </div>
+            <div class="device-list">
+              <span><strong>2XT</strong> Cameras</span>
+              <span><strong>980</strong> Sensors</span>
+              <span><strong>158</strong> Speed Detectors</span>
+            </div>
+          </div>
+        </article>
+      </section>
+    </section>
+
+    <aside class="right-stack">
+      <article class="panel incident-panel">
+        <div class="panel-title-row">
+          <h2>Incident Summary</h2>
+          <span>Delay</span>
+        </div>
+        <ul>
+          <li><b></b><span>Heavy Traffic on HW-9</span><strong>9 mins</strong></li>
+          <li><b></b><span>Construction on Route 21</span><strong>3 mins</strong></li>
+          <li><b></b><span>Stalled Vehicle on Main St</span><strong>20 mins</strong></li>
+          <li><b></b><span>Weather Alert: Heavy Rain</span><strong>View</strong></li>
+        </ul>
+      </article>
+
+      <article class="panel parking-panel">
+        <h2>Parking Status</h2>
+        <div class="parking-meters">
+          <div class="ring warm"><strong>80%</strong><span>Occupied</span></div>
+          <div class="ring cool"><strong>90%</strong><span>Accident</span></div>
+        </div>
+      </article>
+
+      <article class="panel connectivity-panel">
+        <div class="panel-title-row">
+          <h2>Device Connectivity</h2>
+          <span>92%</span>
+        </div>
+        <div class="mini-bars">
+          <i style="--h: 22%"></i><i style="--h: 32%"></i><i style="--h: 56%"></i>
+          <i style="--h: 70%"></i><i style="--h: 82%"></i><i style="--h: 74%"></i>
+          <i style="--h: 48%"></i><i style="--h: 36%"></i><i style="--h: 44%"></i>
+          <i style="--h: 28%"></i><i style="--h: 34%"></i><i style="--h: 18%"></i>
+        </div>
+      </article>
+
+      <article class="panel weather-panel">
+        <h2>Weather Condition</h2>
+        <div class="weather-body">
+          <div class="rain">☔</div>
+          <strong>55°<small>F</small></strong>
+          <div>
+            <span>Rain</span>
+            <span>Low Visibility</span>
+          </div>
+        </div>
+      </article>
+    </aside>
+  </section>
+</main>

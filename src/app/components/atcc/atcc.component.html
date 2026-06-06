@@ -1,0 +1,12 @@
+<table mat-table [dataSource]="intersections" class="mat-elevation-z8">
+
+  <!-- Delay Column -->
+  <ng-container matColumnDef="delay">
+    <th mat-header-cell *matHeaderCellDef> Delay </th>
+    <td mat-cell *matCellDef="let row"> {{ row.delay }} </td>
+  </ng-container>
+
+  <!-- Header and Row Declarations -->
+  <tr mat-header-row *matHeaderRowDef="['delay']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['delay'];"></tr>
+</table>

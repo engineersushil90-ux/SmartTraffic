@@ -1,0 +1,517 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(42, 92, 170, 0.35), transparent 35%),
+    linear-gradient(180deg, #111d36 0%, #071020 48%, #060b16 100%);
+  color: #f5f7fb;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+.atms-dashboard {
+  width: min(1500px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 24px 0 28px;
+}
+
+.topbar,
+.kpi-card,
+.panel {
+  border: 1px solid rgba(119, 146, 201, 0.22);
+  background: linear-gradient(180deg, rgba(22, 34, 61, 0.96), rgba(8, 16, 31, 0.98));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  min-height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 22px;
+  font-size: 1.85rem;
+  font-weight: 800;
+}
+
+.brand-mark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 2px solid #f2c94c;
+  border-radius: 50%;
+  color: #f2c94c;
+  font-size: 1rem;
+}
+
+.nav-tabs {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(84px, 1fr));
+  height: 100%;
+}
+
+.nav-tab {
+  display: grid;
+  place-items: center;
+  border-left: 1px solid rgba(119, 146, 201, 0.16);
+  color: #aeb9dc;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.nav-tab.active {
+  background: linear-gradient(180deg, #344466, #172642);
+  color: #ffffff;
+}
+
+.clock {
+  padding: 0 18px;
+  color: #ffffff;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin: 14px 0;
+}
+
+.kpi-card {
+  position: relative;
+  min-height: 88px;
+  padding: 16px 20px;
+  border-radius: 2px;
+}
+
+.kpi-card span,
+.panel-title-row span {
+  color: #8994ad;
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.kpi-card strong {
+  display: block;
+  margin-top: 8px;
+  color: #ffffff;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.kpi-card small {
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: none;
+}
+
+.kpi-card.success strong {
+  color: #58d16a;
+}
+
+.kpi-card.hot strong {
+  color: #ff7c42;
+}
+
+.warning {
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  color: #ffb24a;
+  font-size: 1.6rem;
+}
+
+.lane-dots {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  margin-top: 14px;
+}
+
+.lane-dots i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #57c7ff;
+}
+
+.lane-dots i:nth-child(1) {
+  background: #865cff;
+}
+
+.lane-dots i:nth-child(n + 4) {
+  background: #ff8444;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 300px minmax(480px, 1fr) 374px;
+  gap: 10px;
+}
+
+.left-stack,
+.main-stack,
+.right-stack,
+.bottom-panels {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.panel {
+  border-radius: 3px;
+  padding: 14px;
+  overflow: hidden;
+}
+
+h2 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.metric-row,
+.two-stat,
+.hardware-body,
+.parking-meters,
+.weather-body,
+.panel-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.icon-ring {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 4px solid #ff4c6c;
+  border-radius: 50%;
+  color: #ff6b7c;
+  font-weight: 900;
+}
+
+.metric-row strong,
+.two-stat strong {
+  display: block;
+  color: #dbe7ff;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.metric-row span,
+.two-stat span {
+  color: #cfd7eb;
+  font-weight: 700;
+}
+
+.legend {
+  display: grid;
+  gap: 8px;
+  color: #cfd7eb;
+  font-size: 0.78rem;
+}
+
+.legend b {
+  display: inline-block;
+  width: 28px;
+  height: 12px;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+
+.pink {
+  background: #d93b76;
+}
+
+.orange {
+  background: #ff6638;
+}
+
+.compact-list {
+  padding-top: 12px;
+}
+
+.two-stat span {
+  flex: 1;
+  color: #ef526c;
+}
+
+.chart-panel {
+  min-height: 170px;
+}
+
+.bar-chart,
+.mini-bars {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  height: 112px;
+  padding: 12px 8px 4px;
+  border-bottom: 1px solid rgba(196, 211, 243, 0.24);
+}
+
+.bar-chart i,
+.mini-bars i {
+  flex: 1;
+  height: var(--h);
+  min-height: 10px;
+  background: linear-gradient(180deg, #ff783d, #d93069);
+}
+
+.map-panel {
+  position: relative;
+  min-height: 370px;
+  padding: 0;
+}
+
+:host ::ng-deep app-map-view,
+:host ::ng-deep app-map-view #map {
+  display: block;
+  height: 100%;
+  min-height: 370px;
+}
+
+.map-alert {
+  position: absolute;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ff3838;
+  color: #ffffff;
+  font-weight: 900;
+  box-shadow: 0 0 0 5px rgba(255, 56, 56, 0.2);
+}
+
+.map-alert.one {
+  top: 24%;
+  left: 52%;
+}
+
+.map-alert.two {
+  top: 55%;
+  left: 26%;
+}
+
+.map-alert.three {
+  right: 18%;
+  bottom: 10%;
+}
+
+.bottom-panels {
+  grid-template-columns: 1fr 1fr;
+}
+
+.hardware-panel {
+  min-height: 190px;
+}
+
+.donut,
+.ring {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 142px;
+  height: 142px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #101a2e 0 52%, transparent 53%),
+    conic-gradient(#ff7a35 0 72%, #d45b63 72% 88%, #25314a 88%);
+}
+
+.donut.cool,
+.ring.cool {
+  background:
+    radial-gradient(circle, #101a2e 0 52%, transparent 53%),
+    conic-gradient(#56d6ff 0 70%, #4767ff 70% 90%, #25314a 90%);
+}
+
+.donut strong,
+.ring strong {
+  color: #ffffff;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.donut span,
+.ring span,
+.donut small {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.device-list {
+  display: grid;
+  flex: 1;
+  gap: 9px;
+}
+
+.device-list span {
+  padding: 10px 12px;
+  border: 1px solid rgba(120, 155, 220, 0.3);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(57, 75, 115, 0.78), rgba(18, 32, 58, 0.92));
+  color: #eaf0ff;
+  font-weight: 800;
+}
+
+.device-list strong {
+  margin-right: 8px;
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+.incident-panel ul {
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.incident-panel li {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 2px;
+  border-bottom: 1px solid rgba(196, 211, 243, 0.12);
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.incident-panel li b {
+  width: 14px;
+  height: 14px;
+  background: #ff7342;
+}
+
+.incident-panel li strong {
+  color: #ffffff;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.parking-meters {
+  min-height: 164px;
+}
+
+.ring {
+  width: 136px;
+  height: 136px;
+  text-align: center;
+}
+
+.ring.warm {
+  background:
+    radial-gradient(circle, #101a2e 0 52%, transparent 53%),
+    conic-gradient(#ffb13d 0 25%, #ff632f 25% 80%, #26314a 80%);
+}
+
+.connectivity-panel {
+  min-height: 175px;
+}
+
+.mini-bars {
+  height: 96px;
+  gap: 6px;
+}
+
+.mini-bars i {
+  background: linear-gradient(180deg, #ffbd43 0 34%, #3ec35b 34% 64%, #2864ff 64%);
+}
+
+.weather-body {
+  min-height: 86px;
+}
+
+.rain {
+  color: #93b7ff;
+  font-size: 3.6rem;
+}
+
+.weather-body strong {
+  color: #eaf0ff;
+  font-size: 3rem;
+}
+
+.weather-body small {
+  font-size: 1.1rem;
+}
+
+.weather-body div:last-child {
+  display: grid;
+  gap: 12px;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+@media (max-width: 1180px) {
+  .topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-tabs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .clock {
+    padding: 14px 22px;
+  }
+
+  .kpi-strip,
+  .dashboard-grid,
+  .bottom-panels {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .main-stack {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .atms-dashboard {
+    width: min(100% - 16px, 1500px);
+    padding-top: 12px;
+  }
+
+  .brand {
+    font-size: 1.35rem;
+  }
+
+  .nav-tabs,
+  .kpi-strip,
+  .dashboard-grid,
+  .bottom-panels {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-tab {
+    min-height: 42px;
+    font-size: 1rem;
+  }
+
+  .hardware-body,
+  .parking-meters {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
