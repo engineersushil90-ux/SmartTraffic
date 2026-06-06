@@ -9,22 +9,10 @@
     </div>
 
     <nav class="side-menu">
-      <span class="side-item active"><i>H</i>Dashboard</span>
-      <span class="side-item"><i>A</i>ATCC</span>
-      <span class="side-item"><i>V</i>VIDS</span>
-      <span class="side-item"><i>M</i>VMS</span>
-      <span class="side-item"><i>W</i>MET</span>
-      <span class="side-item"><i>S</i>VSDS</span>
-      <span class="side-item"><i>I</i>Incidents</span>
-      <span class="side-item"><i>!</i>Alerts</span>
-      <span class="side-item"><i>T</i>Traffic Explorer</span>
-      <span class="side-item"><i>G</i>Trend Analytics</span>
-      <span class="side-item"><i>C</i>Device Management</span>
-      <span class="side-item"><i>S</i>System Health</span>
-      <span class="side-item"><i>U</i>User Management</span>
-      <span class="side-item"><i>L</i>Audit Logs</span>
+      <span class="side-item" *ngFor="let item of sideMenuItems; let first = first" [class.active]="first">
+        <i>{{ item[0] }}</i>{{ item[1] }}
+      </span>
     </nav>
-
   </aside>
 
   <section class="console-body">
@@ -36,15 +24,7 @@
         </div>
 
         <nav class="top-nav" aria-label="Primary dashboard navigation">
-          <span class="top-tab active">Dashboard</span>
-          <span class="top-tab">ATCC</span>
-          <span class="top-tab">VIDS</span>
-          <span class="top-tab">VMS</span>
-          <span class="top-tab">MET</span>
-          <span class="top-tab">VSDS</span>
-          <span class="top-tab">Reports</span>
-          <span class="top-tab">Analytics</span>
-          <span class="top-tab">Settings</span>
+          <span class="top-tab" *ngFor="let tab of topTabs; let first = first" [class.active]="first">{{ tab }}</span>
         </nav>
 
         <div class="header-actions">
@@ -66,40 +46,12 @@
     </header>
 
     <section class="kpi-grid" aria-label="Traffic summary">
-      <article class="metric-card">
-        <span>Average Speed</span>
-        <strong>42 <small>km/h</small></strong>
-        <em class="up">5% vs yesterday</em>
-        <i class="speed-icon"></i>
-      </article>
-      <article class="metric-card">
-        <span>Traffic Volume</span>
-        <strong>36,200 <small>veh/hr</small></strong>
-        <em class="up">8.4% vs yesterday</em>
-        <i class="vehicle-icon"></i>
-      </article>
-      <article class="metric-card">
-        <span>Active Incidents</span>
-        <strong>12</strong>
-        <em class="down">2 new</em>
-        <i class="warning-icon"></i>
-      </article>
-      <article class="metric-card">
-        <span>Travel Time Index</span>
-        <strong>2.6</strong>
-        <em class="moderate">Moderate</em>
-        <i class="sparkline"></i>
-      </article>
-      <article class="metric-card">
-        <span>Congestion Level</span>
-        <strong class="text-value">Moderate</strong>
-        <div class="congestion-meter"><b></b></div>
-      </article>
-      <article class="metric-card weather-kpi">
-        <span>Weather</span>
-        <strong>28&deg;C</strong>
-        <em>Partly Cloudy</em>
-        <i class="weather-icon"></i>
+      <article class="metric-card" *ngFor="let kpi of kpis" [attr.title]="kpi.label + ': ' + kpi.value + (kpi.unit ? ' ' + kpi.unit : '')">
+        <span>{{ kpi.label }}</span>
+        <strong [class.text-value]="kpi.meter">{{ kpi.value }} <small *ngIf="kpi.unit">{{ kpi.unit }}</small></strong>
+        <em *ngIf="kpi.trend" [ngClass]="kpi.state">{{ kpi.trend }}</em>
+        <i *ngIf="kpi.icon" [class]="kpi.icon"></i>
+        <div class="congestion-meter" *ngIf="kpi.meter"><b></b></div>
       </article>
     </section>
 
@@ -118,11 +70,7 @@
           <span class="map-pin three"></span>
         </div>
         <div class="map-legend">
-          <span><b class="smooth"></b>Smooth</span>
-          <span><b class="moderate-dot"></b>Moderate</span>
-          <span><b class="congested"></b>Congested</span>
-          <span><b class="incident"></b>Incident</span>
-          <span><b class="camera"></b>Camera</span>
+          <span *ngFor="let item of mapLegend"><b [class]="item[0]"></b>{{ item[1] }}</span>
         </div>
       </article>
 
@@ -131,10 +79,7 @@
           <h2>Live Video Feeds <small>(VIDS)</small></h2>
         </div>
         <div class="video-grid">
-          <div class="video-feed"><span>NH 44 - Rohini</span></div>
-          <div class="video-feed"><span>Ring Road - Wazirpur</span></div>
-          <div class="video-feed"><span>NH 48 - Rajouri Garden</span></div>
-          <div class="video-feed"><span>NH 24 - DND Flyway</span></div>
+          <div class="video-feed" *ngFor="let feed of videoFeeds" [attr.title]="feed"><span>{{ feed }}</span></div>
         </div>
       </article>
 
@@ -144,23 +89,18 @@
           <a>View All</a>
         </div>
         <ul class="alert-list">
-          <li><b class="red">!</b><span>Accident on NH 48</span><time>10:40 AM</time></li>
-          <li><b class="orange">!</b><span>Heavy Traffic on Ring Road</span><time>10:38 AM</time></li>
-          <li><b class="yellow">!</b><span>Lane Closure on NH 24</span><time>10:35 AM</time></li>
-          <li><b class="blue"></b><span>Poor Visibility - Fog</span><time>10:30 AM</time></li>
-          <li><b class="purple">A</b><span>Signal Malfunction - Sector 62</span><time>10:28 AM</time></li>
-          <li><b class="orange">!</b><span>Queue build-up at Toll Plaza</span><time>10:24 AM</time></li>
-          <li><b class="blue"></b><span>Camera offline at Wazirpur</span><time>10:21 AM</time></li>
+          <li *ngFor="let alert of alerts" [attr.title]="alert.text + ' - ' + alert.time">
+            <b [class]="alert.color">{{ alert.icon }}</b><span>{{ alert.text }}</span><time>{{ alert.time }}</time>
+          </li>
         </ul>
       </article>
 
       <article class="panel vms-card">
         <div class="panel-head"><h2>VMS - Variable Message Signs</h2><a>View All</a></div>
         <div class="vms-scroll">
-          <div class="vms-row"><b>DRIVE SAFE<br />ARRIVE SAFE</b><span>IIT Flyover</span><time>10:42 AM<br /><em>Active</em></time></div>
-          <div class="vms-row"><b>HEAVY TRAFFIC<br />AHEAD</b><span>NH 44 Rohini</span><time>10:41 AM<br /><em>Active</em></time></div>
-          <div class="vms-row"><b>FOG AHEAD<br />DRIVE SLOW</b><span>DND Flyway</span><time>10:40 AM<br /><em>Active</em></time></div>
-          <div class="vms-row"><b>SLOW DOWN<br />WORK ZONE</b><span>Ring Road</span><time>10:36 AM<br /><em>Active</em></time></div>
+          <div class="vms-row" *ngFor="let vms of vmsMessages" [attr.title]="vms.place + ': ' + vms.message + ' ' + vms.line">
+            <b>{{ vms.message }}<br />{{ vms.line }}</b><span>{{ vms.place }}</span><time>{{ vms.time }}<br /><em>{{ vms.status }}</em></time>
+          </div>
         </div>
       </article>
 
@@ -172,22 +112,19 @@
           <span>Partly Cloudy</span>
         </div>
         <dl>
-          <div><dt>Humidity</dt><dd>54%</dd></div>
-          <div><dt>Wind</dt><dd>12 km/h NE</dd></div>
-          <div><dt>Rainfall</dt><dd>0.0 mm</dd></div>
-          <div><dt>Visibility</dt><dd>6.5 km</dd></div>
+          <div *ngFor="let stat of weatherStats" [attr.title]="stat[0] + ': ' + stat[1]"><dt>{{ stat[0] }}</dt><dd>{{ stat[1] }}</dd></div>
         </dl>
       </article>
 
       <article class="panel vds-card">
         <div class="panel-head"><h2>VSDS - Vehicle Speed Detection System</h2><a>View All</a></div>
-        <div class="ring-row">
-          <div class="mini-ring blue"><strong>36,200</strong><span>Total Records</span></div>
-          <div class="mini-ring green"><strong>95.7 <small>km/h</small></strong><span>Avg Speed</span></div>
-          <div class="mini-ring yellow"><strong>213 <small>km/h</small></strong><span>Max Speed</span></div>
-          <div class="mini-ring violet"><strong>36,097</strong><span>Speed Violations</span></div>
+        <div class="vsds-kpis">
+          <div class="vsds-kpi" *ngFor="let metric of vsdsMetrics" [attr.title]="metric.label + ': ' + metric.value + ' - ' + metric.trend">
+            <span>{{ metric.label }}</span>
+            <strong>{{ metric.value }}</strong>
+            <em [ngClass]="metric.state">{{ metric.state === 'up' ? '↑ ' : metric.state === 'down' ? '↓ ' : '' }}{{ metric.trend }}</em>
+          </div>
         </div>
-        <div class="line-chart"><i></i><i></i></div>
       </article>
 
       <article class="panel incident-card">
@@ -196,11 +133,9 @@
           <div class="incident-body">
             <div class="donut-chart"><strong>12</strong><span>Total</span></div>
             <ul>
-              <li><b class="red"></b>Accident <span>5 (42%)</span></li>
-              <li><b class="orange"></b>Breakdown <span>3 (25%)</span></li>
-              <li><b class="yellow"></b>Construction <span>2 (17%)</span></li>
-              <li><b class="gray"></b>Other <span>2 (16%)</span></li>
-              <li><b class="blue"></b>Camera Issue <span>1 (8%)</span></li>
+              <li *ngFor="let incident of incidents" [attr.title]="incident.name + ': ' + incident.count + ' (' + incident.percent + '%)'">
+                <b [class]="incident.color"></b>{{ incident.name }} <span>{{ incident.count }} ({{ incident.percent }}%)</span>
+              </li>
             </ul>
           </div>
         </div>
@@ -209,21 +144,14 @@
       <article class="panel health-card">
         <div class="panel-head"><h2>Device Status by Category</h2><a>View All</a></div>
         <div class="device-status-summary">
-          <span><em>Total Device</em><strong>85</strong></span>
-          <span><em>Connected</em><strong>66</strong></span>
-          <span><em>Disconnected</em><strong>19</strong></span>
+          <span *ngFor="let item of deviceSummary"><em>{{ item[0] }}</em><strong>{{ item[1] }}</strong></span>
         </div>
         <div class="device-status-chart" aria-label="Device status by category">
           <div class="device-bars">
-            <span style="--online: 0; --offline: 6;"><i></i><b></b><em>ATCC</em></span>
-            <span style="--online: 28; --offline: 0;"><i></i><b></b><em>ECB-GSM</em></span>
-            <span style="--online: 0; --offline: 1;"><i></i><b></b><em>ECB-SYS</em></span>
-            <span style="--online: 1; --offline: 0;"><i></i><b></b><em>Main</em></span>
-            <span style="--online: 1; --offline: 0;"><i></i><b></b><em>MET</em></span>
-            <span style="--online: 16; --offline: 6;"><i></i><b></b><em>PTZ</em></span>
-            <span style="--online: 10; --offline: 0;"><i></i><b></b><em>VIDS</em></span>
-            <span style="--online: 2; --offline: 6;"><i></i><b></b><em>VMS</em></span>
-            <span style="--online: 6; --offline: 0;"><i></i><b></b><em>VSDS</em></span>
+            <span *ngFor="let device of deviceStatus" [style.--online]="device.online" [style.--offline]="device.offline" [attr.title]="device.name + ' | Online: ' + device.online + ' | Offline: ' + device.offline">
+              <i></i><b></b><em>{{ device.name }}</em>
+              <small class="bar-tip"><strong>{{ device.name }}</strong><span class="tip-online">Online: {{ device.online }}</span><span class="tip-offline">Offline: {{ device.offline }}</span></small>
+            </span>
           </div>
           <div class="device-chart-legend"><span><b></b>Online</span><span><b></b>Offline</span></div>
         </div>
@@ -232,17 +160,11 @@
       <article class="panel activity-card">
         <div class="panel-head"><h2>Recent Activities</h2><a>View All</a></div>
         <div class="activity-scroll">
-          <p><time>10:43 AM</time>Incident created on NH 48</p>
-          <p><time>10:41 AM</time>VMS message updated on NH 44</p>
-          <p><time>10:40 AM</time>Camera offline at Sector 62</p>
-          <p><time>10:38 AM</time>Weather alert: Fog in Delhi</p>
-          <p><time>10:35 AM</time>Traffic data synced from VSDS-101</p>
-          <p><time>10:31 AM</time>PTZ camera recovered at Rohini</p>
-          <p><time>10:28 AM</time>Alert acknowledged by admin</p>
+          <p *ngFor="let activity of activities" [attr.title]="activity[1]"><time>{{ activity[0] }}</time>{{ activity[1] }}</p>
         </div>
       </article>
     </section>
 
-    <footer class="console-footer">© 2026 SmartTraffic. All rights reserved.</footer>
+    <footer class="console-footer">&copy; 2026 SmartTraffic. All rights reserved.</footer>
   </section>
 </main>

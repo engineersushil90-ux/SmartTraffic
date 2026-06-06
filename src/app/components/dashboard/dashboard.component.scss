@@ -720,12 +720,12 @@ h2 {
 }
 
 .met-card {
-  grid-column: 4 / 6;
-  grid-row: 2;
+  grid-column: 10 / 13;
+  grid-row: 3;
 }
 
 .vds-card {
-  grid-column: 6 / 10;
+  grid-column: 4 / 10;
   grid-row: 2;
 }
 
@@ -920,6 +920,58 @@ dd {
   overflow-y: auto;
 }
 
+.vsds-kpis {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  min-height: 0;
+}
+
+.vsds-kpi {
+  display: grid;
+  align-content: center;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(119, 146, 201, 0.15);
+  border-radius: 6px;
+  background: rgba(28, 47, 74, 0.72);
+}
+
+.vsds-kpi span {
+  color: #aeb8ca;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.vsds-kpi strong {
+  margin-top: 7px;
+  color: #ffffff;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.vsds-kpi em {
+  margin-top: 7px;
+  color: #aeb8ca;
+  font-size: 0.66rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.vsds-kpi .up {
+  color: #76bd64;
+}
+
+.vsds-kpi .down {
+  color: #e37057;
+}
+
+.vsds-kpi .moderate {
+  color: #f2c84a;
+}
+
 .mini-ring,
 .donut-chart {
   display: grid;
@@ -1019,7 +1071,7 @@ dd {
 }
 
 .activity-card {
-  grid-column: 7 / 13;
+  grid-column: 7 / 10;
   grid-row: 3;
 }
 
@@ -1085,6 +1137,7 @@ dd {
 }
 
 .device-bars span {
+  position: relative;
   display: grid;
   grid-template-rows: 1fr 20px;
   align-items: end;
@@ -1123,6 +1176,54 @@ dd {
   transform: rotate(-40deg);
   transform-origin: center top;
   white-space: nowrap;
+}
+
+.bar-tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 4;
+  display: none;
+  min-width: 112px;
+  padding: 7px 9px;
+  border: 1px solid rgba(151, 166, 190, 0.35);
+  border-radius: 6px;
+  background: #f7f9fc;
+  color: #172235 !important;
+  font-size: 0.68rem;
+  line-height: 1.55;
+  text-align: left;
+  transform: translateX(-50%);
+}
+
+.bar-tip strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.bar-tip span {
+  display: block;
+}
+
+.bar-tip span::before {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  content: "";
+  border-radius: 50%;
+}
+
+.tip-online::before {
+  background: #62b29f;
+}
+
+.tip-offline::before {
+  background: #d96d4f;
+}
+
+.device-bars span:hover .bar-tip {
+  display: block;
 }
 
 .met-card,
@@ -1277,6 +1378,7 @@ dd {
   .kpi-grid,
   .main-grid,
   .video-grid,
+  .vsds-kpis,
   .ring-row,
   .incident-body {
     grid-template-columns: 1fr;
