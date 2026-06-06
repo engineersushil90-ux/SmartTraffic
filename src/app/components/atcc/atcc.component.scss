@@ -1,9 +1,94 @@
 :host {
   display: block;
   min-height: 100vh;
-  color: #182033;
+  color: #e8edf7;
   font-family: Inter, Roboto, Arial, sans-serif;
+  background: #0f1723;
+}
+
+:host-context(.light-theme) {
+  color: #182033;
   background: #f4f6fa;
+}
+
+:host-context(.light-theme) .atcc-side {
+  background: #ffffff;
+  color: #2f3a57;
+}
+
+:host-context(.light-theme) .atcc-menu-head {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+:host-context(.light-theme) .sub-item,
+:host-context(.light-theme) .inner-item {
+  color: #4f566b;
+}
+
+:host-context(.light-theme) .sub-item.active,
+:host-context(.light-theme) .inner-item.active {
+  background: rgba(82, 121, 194, 0.12);
+  color: #1b2a4b;
+}
+
+.summary-card,
+.vehicle-card,
+.panel,
+.report-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(15, 25, 45, 0.92);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
+}
+
+.summary-card {
+  backdrop-filter: blur(10px);
+}
+
+.vehicle-card {
+  backdrop-filter: blur(10px);
+}
+
+.panel,
+.report-card {
+  backdrop-filter: blur(12px);
+}
+
+.legend-list li {
+  background: rgba(255, 255, 255, 0.04);
+  color: #e7edf7;
+}
+
+.analysis-box {
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.table-wrap {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+:host-context(.light-theme) .summary-card,
+:host-context(.light-theme) .vehicle-card,
+:host-context(.light-theme) .panel,
+:host-context(.light-theme) .report-card {
+  border: 1px solid #e5e8ee;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(24, 32, 51, 0.08);
+}
+
+:host-context(.light-theme) .legend-list li {
+  background: #f4f6fb;
+  color: #2f3a57;
+}
+
+:host-context(.light-theme) .analysis-box {
+  border-left: 1px solid #dfe3ea;
+}
+
+:host-context(.light-theme) .table-wrap {
+  background: #ffffff;
+  border-color: #e5e8ee;
 }
 
 .atcc-shell {
@@ -276,10 +361,11 @@ h1 {
 .vehicle-card,
 .panel,
 .report-card {
-  border: 1px solid #e5e8ee;
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 0 4px 14px rgba(24, 32, 51, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(15, 25, 45, 0.92);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(10px);
 }
 
 .summary-card {
@@ -386,9 +472,44 @@ h1 {
 
 .pie-layout {
   display: grid;
-  grid-template-columns: 230px minmax(150px, 1fr) 220px;
+  grid-template-columns: 220px minmax(200px, 1fr) 220px;
   gap: 18px;
+  align-items: start;
+}
+
+.legend-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  transition: opacity 0.2s ease;
+}
+
+.legend-list li {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f4f6fb;
+  color: #2f3a57;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.legend-list li span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-list b {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 
 .pie-chart {

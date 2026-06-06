@@ -58,7 +58,10 @@
           <div class="pie-layout">
             <div class="pie-chart"></div>
             <ul class="legend-list">
-              <li *ngFor="let vehicle of vehicleClasses"><b [style.background]="vehicle.color"></b>{{ vehicle.name }} ({{ vehicle.percent }}%)</li>
+              <li *ngFor="let vehicle of vehicleClasses">
+                <span><b [style.background]="vehicle.color"></b>{{ vehicle.name }}</span>
+                <strong>{{ vehicle.percent }}%</strong>
+              </li>
             </ul>
             <div class="analysis-box">
               <h3>Distribution Analysis</h3>
