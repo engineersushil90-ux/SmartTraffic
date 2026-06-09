@@ -39,6 +39,9 @@ testem.log
 /typings
 __screenshots__/
 
+# Local logs
+/backend/stream-gateway/gateway.log
+
 # System files
 .DS_Store
 Thumbs.db

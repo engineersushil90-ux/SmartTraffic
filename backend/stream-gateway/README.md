@@ -47,6 +47,7 @@ Environment variables:
 ```text
 STREAM_GATEWAY_ADDR=:8080
 STREAM_INPUT_RTSP=rtsp://localhost:8554/webcam
+STREAM_RTSP_TRANSPORT=tcp
 STREAM_BUFFER_BYTES=4194304
 FFMPEG_PATH=ffmpeg
 ```

@@ -13,16 +13,18 @@ import (
 )
 
 type FFmpegRunner struct {
-	ffmpegPath string
-	inputURL   string
-	output     io.Writer
+	ffmpegPath    string
+	inputURL      string
+	rtspTransport string
+	output        io.Writer
 }
 
-func NewFFmpegRunner(ffmpegPath string, inputURL string, output io.Writer) *FFmpegRunner {
+func NewFFmpegRunner(ffmpegPath string, inputURL string, rtspTransport string, output io.Writer) *FFmpegRunner {
 	return &FFmpegRunner{
-		ffmpegPath: ffmpegPath,
-		inputURL:   inputURL,
-		output:     output,
+		ffmpegPath:    ffmpegPath,
+		inputURL:      inputURL,
+		rtspTransport: rtspTransport,
+		output:        output,
 	}
 }
 
@@ -43,7 +45,7 @@ func (r *FFmpegRunner) RunLoop(ctx context.Context) {
 
 func (r *FFmpegRunner) runOnce(ctx context.Context) error {
 	args := []string{
-		"-rtsp_transport", "tcp",
+		"-rtsp_transport", r.rtspTransport,
 		"-i", r.inputURL,
 		"-an",
 		"-c:v", "copy",

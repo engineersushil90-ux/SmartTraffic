@@ -12,7 +12,7 @@ import (
 func main() {
 	cfg := config.Load()
 	hub := stream.NewHub(cfg.BufferBytes)
-	runner := stream.NewFFmpegRunner(cfg.FFmpegPath, cfg.InputURL, hub)
+	runner := stream.NewFFmpegRunner(cfg.FFmpegPath, cfg.InputURL, cfg.RTSPTransport, hub)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

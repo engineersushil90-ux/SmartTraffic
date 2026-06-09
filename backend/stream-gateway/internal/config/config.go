@@ -7,18 +7,20 @@ import (
 )
 
 type Config struct {
-	Addr        string
-	InputURL    string
-	FFmpegPath  string
-	BufferBytes int
+	Addr          string
+	InputURL      string
+	FFmpegPath    string
+	RTSPTransport string
+	BufferBytes   int
 }
 
 func Load() Config {
 	return Config{
-		Addr:        env("STREAM_GATEWAY_ADDR", ":8080"),
-		InputURL:    env("STREAM_INPUT_RTSP", "rtsp://localhost:8554/webcam"),
-		FFmpegPath:  env("FFMPEG_PATH", "ffmpeg"),
-		BufferBytes: envInt("STREAM_BUFFER_BYTES", 4*1024*1024),
+		Addr:          env("STREAM_GATEWAY_ADDR", ":8080"),
+		InputURL:      env("STREAM_INPUT_RTSP", "rtsp://localhost:8554/live"),
+		FFmpegPath:    env("FFMPEG_PATH", "ffmpeg"),
+		RTSPTransport: env("STREAM_RTSP_TRANSPORT", "tcp"),
+		BufferBytes:   envInt("STREAM_BUFFER_BYTES", 4*1024*1024),
 	}
 }
 
