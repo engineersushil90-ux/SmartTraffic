@@ -24,6 +24,13 @@ export interface LegendItem {
   label: string;
 }
 
+export interface VideoFeed {
+  label: string;
+  streamType: 'placeholder' | 'hls' | 'mjpeg' | 'rtsp';
+  streamUrl?: string;
+  ptzId?: string;
+}
+
 export interface AlertItem {
   color: string;
   icon: string;
@@ -86,7 +93,7 @@ export interface DashboardData {
   };
   kpis: KpiCard[];
   mapLegend: LegendItem[];
-  videoFeeds: string[];
+  videoFeeds: VideoFeed[];
   alerts: AlertItem[];
   vmsMessages: VmsMessage[];
   weatherStats: NameValue[];
@@ -151,7 +158,22 @@ export class DashboardDataService {
         { className: 'incident', label: 'Incident' },
         { className: 'camera', label: 'Camera' },
       ],
-      videoFeeds: ['NH 44 - Rohini', 'Ring Road - Wazirpur', 'NH 48 - Rajouri Garden', 'NH 24 - DND Flyway'],
+      videoFeeds: [
+        {
+          label: 'NH 44 - Rohini',
+          streamType: 'rtsp',
+          streamUrl: 'rtsp://localhost:8554/webcam',
+          ptzId: 'ptz-rohini-01',
+        },
+        {
+          label: 'Ring Road - Wazirpur',
+          streamType: 'mjpeg',
+          streamUrl: '/streams/ring-road-wazirpur/mjpeg',
+          ptzId: 'ptz-wazirpur-01',
+        },
+        { label: 'NH 48 - Rajouri Garden', streamType: 'placeholder' },
+        { label: 'NH 24 - DND Flyway', streamType: 'placeholder' },
+      ],
       alerts: [
         { color: 'red', icon: '!', text: 'Accident on NH 48', time: '10:40 AM' },
         { color: 'orange', icon: '!', text: 'Heavy Traffic on Ring Road', time: '10:38 AM' },

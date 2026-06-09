@@ -100,4 +100,13 @@ export class DashboardComponent {
 
     document.exitFullscreen?.();
   }
+
+  sendPtzCommand(cameraId: string, command: 'left' | 'right' | 'up' | 'down' | 'zoomIn' | 'zoomOut'): void {
+    void fetch(`/api/ptz/${encodeURIComponent(cameraId)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command }),
+    }).catch(() => undefined);
+  }
+
 }

@@ -94,7 +94,18 @@
           <h2>Live Video Feeds <small>(VIDS)</small></h2>
         </div>
         <div class="video-grid">
-          <div class="video-feed" *ngFor="let feed of videoFeeds" [attr.title]="feed"><span>{{ feed }}</span></div>
+          <div class="video-feed" *ngFor="let feed of videoFeeds" [attr.title]="feed.label">
+            <video *ngIf="feed.streamType === 'hls' && feed.streamUrl" [src]="feed.streamUrl" autoplay muted playsinline controls style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#101827"></video>
+            <img *ngIf="feed.streamType === 'mjpeg' && feed.streamUrl" [src]="feed.streamUrl" [alt]="feed.label" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
+            <span>{{ feed.label }}</span>
+            <small *ngIf="feed.streamType === 'rtsp' && !feed.ptzId" style="position:absolute;right:8px;bottom:8px;left:8px;z-index:2;padding:5px 8px;border-radius:4px;background:rgba(15,25,41,.78);color:#e8effd;font-size:.68rem;font-weight:800;text-align:center">RTSP source configured</small>
+            <div *ngIf="feed.ptzId" style="position:absolute;right:8px;bottom:8px;z-index:3;display:flex;gap:4px">
+              <button type="button" aria-label="Pan left" (click)="sendPtzCommand(feed.ptzId, 'left')" style="border:0;border-radius:4px;background:rgba(15,25,41,.78);color:#fff;cursor:pointer;font-weight:800">&lt;</button>
+              <button type="button" aria-label="Tilt up" (click)="sendPtzCommand(feed.ptzId, 'up')" style="border:0;border-radius:4px;background:rgba(15,25,41,.78);color:#fff;cursor:pointer;font-weight:800">^</button>
+              <button type="button" aria-label="Tilt down" (click)="sendPtzCommand(feed.ptzId, 'down')" style="border:0;border-radius:4px;background:rgba(15,25,41,.78);color:#fff;cursor:pointer;font-weight:800">v</button>
+              <button type="button" aria-label="Pan right" (click)="sendPtzCommand(feed.ptzId, 'right')" style="border:0;border-radius:4px;background:rgba(15,25,41,.78);color:#fff;cursor:pointer;font-weight:800">&gt;</button>
+            </div>
+          </div>
         </div>
       </article>
 

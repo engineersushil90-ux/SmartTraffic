@@ -808,7 +808,6 @@ h2 {
   height: 54px;
   content: "";
   background: repeating-linear-gradient(90deg, #b8c2d1 0 7px, transparent 7px 28px);
-  opacity: 0.28;
   transform: perspective(90px) rotateX(50deg);
 }
 
@@ -828,6 +827,7 @@ h2 {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 
 .alerts-card {
   grid-column: 10 / 13;
@@ -938,15 +938,6 @@ time {
   min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
-}
-
-.vms-scroll {
-  height: auto;
-}
-
-.incident-scroll,
-.activity-scroll {
-  height: auto;
 }
 
 :is(.alert-list, .console-body, .main-grid, .side-menu, .met-card dl, .ring-row, .vms-scroll, .incident-scroll, .activity-scroll)::-webkit-scrollbar {
@@ -1404,11 +1395,6 @@ dd {
   display: block;
 }
 
-.met-card,
-.vds-card {
-  overflow: hidden;
-}
-
 .device-chart-legend {
   display: flex;
   justify-content: center;
@@ -1447,10 +1433,6 @@ dd {
   font-weight: 700;
   text-align: center;
   line-height: 1.2;
-}
-
-.side-hidden .console-footer {
-  left: auto;
 }
 
 .light-theme {
@@ -1540,11 +1522,6 @@ dd {
 
 .light-theme .expand-icon {
   color: #6b7280;
-}
-
-.light-theme .side-item.active,
-.light-theme .top-tab.active {
-  color: #355fb5;
 }
 
 .light-theme .device-bars {
