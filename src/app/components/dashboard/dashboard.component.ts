@@ -149,15 +149,25 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     this.playWhenBuffered(event, bufferSeconds);
   }
 
-  playWhenBuffered(event: Event, bufferSeconds = 2): void {
+  playWhenBuffered(event: Event, bufferSeconds = 5): void {
     const video = event.target as HTMLVideoElement;
+    const requiredBuffer = Math.max(1, bufferSeconds);
 
-    if (this.bufferedPlaybackStarted.has(video) || this.getBufferedAhead(video) < bufferSeconds) {
+    if (this.bufferedPlaybackStarted.has(video) || this.getBufferedAhead(video) < requiredBuffer) {
       return;
     }
 
     this.bufferedPlaybackStarted.add(video);
-    void video.play().catch(() => undefined);
+
+    const timer = this.flvStartTimers.get(video);
+    if (timer !== undefined) {
+      window.clearTimeout(timer);
+      this.flvStartTimers.delete(video);
+    }
+
+    if (video.paused) {
+      void video.play().catch(() => undefined);
+    }
   }
 
   maintainLiveBuffer(event: Event, bufferSeconds = 2): void {
@@ -173,6 +183,10 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
     if (drift > 3 || drift < -1) {
       video.currentTime = targetTime;
+    }
+
+    if (video.paused && this.getBufferedAhead(video) >= Math.max(1, bufferSeconds)) {
+      void video.play().catch(() => undefined);
     }
   }
 
@@ -234,7 +248,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       {
         enableWorker: true,
         enableStashBuffer: true,
-        stashInitialSize: 1024 * 256,
+        stashInitialSize: 1024 * 1024,
         liveBufferLatencyChasing: true,
         liveBufferLatencyMaxLatency: bufferSeconds + 1,
         liveBufferLatencyMinRemain: Math.max(0.5, bufferSeconds - 0.5),
@@ -246,8 +260,13 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     this.flvPlayers.set(video, player);
 
     const timer = window.setTimeout(() => {
-      this.bufferedPlaybackStarted.add(video);
-      void player.play();
+      if (!this.bufferedPlaybackStarted.has(video)) {
+        this.bufferedPlaybackStarted.add(video);
+        const playResult = player.play();
+        if (playResult instanceof Promise) {
+          void playResult.catch(() => undefined);
+        }
+      }
     }, Math.max(1, bufferSeconds) * 1000);
     this.flvStartTimers.set(video, timer);
   }

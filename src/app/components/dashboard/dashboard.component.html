@@ -99,6 +99,7 @@
               *ngIf="feed.streamType === 'hls' && feed.streamUrl"
               [src]="feed.streamUrl"
               muted
+              autoplay
               playsinline
               controls
               preload="auto"
@@ -114,6 +115,7 @@
               [attr.data-stream-url]="feed.streamUrl"
               [attr.data-buffer-seconds]="feed.bufferSeconds || 2"
               muted
+              autoplay
               playsinline
               controls
               preload="auto"
