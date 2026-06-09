@@ -26,8 +26,9 @@ export interface LegendItem {
 
 export interface VideoFeed {
   label: string;
-  streamType: 'placeholder' | 'hls' | 'mjpeg' | 'rtsp';
+  streamType: 'placeholder' | 'hls' | 'mjpeg' | 'rtsp' | 'flv';
   streamUrl?: string;
+  bufferSeconds?: number;
   ptzId?: string;
 }
 
@@ -161,8 +162,9 @@ export class DashboardDataService {
       videoFeeds: [
         {
           label: 'NH 44 - Rohini',
-          streamType: 'rtsp',
-          streamUrl: 'rtsp://localhost:8554/webcam',
+          streamType: 'flv',
+          streamUrl: 'http://localhost:8080/live',
+          bufferSeconds: 2,
           ptzId: 'ptz-rohini-01',
         },
         {
