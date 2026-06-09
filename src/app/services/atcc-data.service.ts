@@ -37,10 +37,18 @@ export interface AtccRecord {
   color: string;
 }
 
+export interface ReportParameter {
+  label: string;
+  type: 'date' | 'time' | 'select';
+  value: string;
+  options?: string[];
+}
+
 export interface ReportCard {
   title: string;
   description: string;
   fields: string[];
+  parameters: ReportParameter[];
   exports: string[];
 }
 
@@ -102,9 +110,54 @@ export class AtccDataService {
         { id: 17607, junction: 'ATCC-Test', timestamp: '2026-03-09 18:25:41', vehicleClass: 'Bus/Truck', direction: 'Toward phil', cameraId: '192.168.2.97', lane: 2, speed: '-', color: '-' },
       ],
       reports: [
-        { title: 'Summary Report', description: 'Overview statistics with total counts, peak hours, and key metrics.', fields: ['Start Date', 'End Date', 'Start Time', 'End Time', 'Junction', 'Vehicle Class'], exports: ['PDF', 'Excel', 'CSV'] },
-        { title: 'Detailed Report', description: 'Complete record-by-record listing with timestamps, speeds, and vehicle details.', fields: ['Start Date', 'End Date', 'Start Time', 'End Time', 'Junction', 'Vehicle Class', 'Direction', 'Camera ID'], exports: ['PDF', 'Excel', 'CSV'] },
-        { title: 'Report with Images', description: 'Traffic records with vehicle images for visual verification and analysis.', fields: ['Start Date', 'End Date', 'Start Time', 'End Time', 'Junction', 'Vehicle Class', 'Direction', 'Camera ID'], exports: ['PDF', 'Excel', 'CSV'] },
+        {
+          title: 'Summary Report',
+          description: 'Overview statistics with total counts, peak hours, and key metrics.',
+          fields: ['Start Date', 'End Date', 'Start Time', 'End Time', 'Junction', 'Vehicle Class', 'Direction', 'Camera ID'],
+          parameters: [
+            { label: 'Start Date', type: 'date', value: '2026-05-10' },
+            { label: 'End Date', type: 'date', value: '2026-06-09' },
+            { label: 'Start Time', type: 'time', value: '00:00' },
+            { label: 'End Time', type: 'time', value: '23:59:59' },
+            { label: 'Junction', type: 'select', value: 'All Junctions', options: ['All Junctions', 'ATCC-Test'] },
+            { label: 'Vehicle Class', type: 'select', value: 'All Classes', options: ['All Classes', 'Car', 'Bus/Truck', 'SUV', 'Motorcycle'] },
+            { label: 'Direction', type: 'select', value: 'All Directions', options: ['All Directions', 'Toward phil'] },
+            { label: 'Camera ID', type: 'select', value: 'All Cameras', options: ['All Cameras', '192.168.2.97'] },
+          ],
+          exports: ['PDF', 'Excel', 'CSV'],
+        },
+        {
+          title: 'Detailed Report',
+          description: 'Complete record-by-record listing with timestamps, speeds, and vehicle details.',
+          fields: ['Start Date', 'End Date', 'Start Time', 'End Time', 'Junction', 'Vehicle Class', 'Direction', 'Camera ID'],
+          parameters: [
+            { label: 'Start Date', type: 'date', value: '2026-05-10' },
+            { label: 'End Date', type: 'date', value: '2026-06-09' },
+            { label: 'Start Time', type: 'time', value: '00:00' },
+            { label: 'End Time', type: 'time', value: '23:59:59' },
+            { label: 'Junction', type: 'select', value: 'All Junctions', options: ['All Junctions', 'ATCC-Test'] },
+            { label: 'Vehicle Class', type: 'select', value: 'All Classes', options: ['All Classes', 'Car', 'Bus/Truck', 'SUV', 'Motorcycle'] },
+            { label: 'Direction', type: 'select', value: 'All Directions', options: ['All Directions', 'Toward phil'] },
+            { label: 'Camera ID', type: 'select', value: 'All Cameras', options: ['All Cameras', '192.168.2.97'] },
+          ],
+          exports: ['PDF', 'Excel', 'CSV'],
+        },
+        {
+          title: 'Report with Images',
+          description: 'Traffic records with vehicle images for visual verification and analysis.',
+          fields: ['Start Date', 'End Date', 'Start Time', 'End Time', 'Junction', 'Vehicle Class', 'Direction', 'Camera ID'],
+          parameters: [
+            { label: 'Start Date', type: 'date', value: '2026-05-10' },
+            { label: 'End Date', type: 'date', value: '2026-06-09' },
+            { label: 'Start Time', type: 'time', value: '00:00' },
+            { label: 'End Time', type: 'time', value: '23:59:59' },
+            { label: 'Junction', type: 'select', value: 'All Junctions', options: ['All Junctions', 'ATCC-Test'] },
+            { label: 'Vehicle Class', type: 'select', value: 'All Classes', options: ['All Classes', 'Car', 'Bus/Truck', 'SUV', 'Motorcycle'] },
+            { label: 'Direction', type: 'select', value: 'All Directions', options: ['All Directions', 'Toward phil'] },
+            { label: 'Camera ID', type: 'select', value: 'All Cameras', options: ['All Cameras', '192.168.2.97'] },
+          ],
+          exports: ['PDF', 'Excel', 'CSV'],
+        },
       ],
     };
   }

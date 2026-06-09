@@ -27,6 +27,7 @@ export class ATCCComponent implements OnInit, OnChanges {
   readonly totalVehicles = this.vehicleClasses.reduce((sum, item) => sum + item.count, 0);
   readonly pieSlices = this.buildPieSlices(this.vehicleClasses);
   activeSection: AtccSection = 'visualization';
+  selectedReportIndex = 1;
 
   readonly subMenu: Array<{ id: AtccSection; label: string; icon: string }> = [
     { id: 'visualization', label: 'Visualization', icon: 'chart' },
@@ -88,6 +89,17 @@ export class ATCCComponent implements OnInit, OnChanges {
 
   setSubSection(subSection: string): void {
     this.activeSubSection = subSection;
+  }
+
+  get selectedReport() {
+    return this.reports[this.selectedReportIndex] ?? this.reports[0];
+  }
+
+  setReport(index: string): void {
+    const nextIndex = Number(index);
+    if (Number.isInteger(nextIndex) && this.reports[nextIndex]) {
+      this.selectedReportIndex = nextIndex;
+    }
   }
 
   getDirectionTotal(item: { east: number; north: number; south: number; west: number }): number {

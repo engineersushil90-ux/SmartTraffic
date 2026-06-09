@@ -111,17 +111,40 @@
       </div>
     </section>
 
-    <section *ngIf="activeSection === 'reports'" class="reports-grid">
-      <article class="report-card" *ngFor="let report of reports">
-        <h2>{{ report.title }}</h2>
-        <p>{{ report.description }}</p>
-        <div class="report-fields">
-          <label *ngFor="let field of report.fields">{{ field }}<input [value]="field.includes('Date') ? '2026-05-07' : field.includes('Time') ? '00:00:00' : 'All ' + field + 's'" /></label>
+    <section *ngIf="activeSection === 'reports'" class="reports-view">
+      <article class="report-form-card">
+        <header class="report-form-head">
+          <span class="report-head-icon" aria-hidden="true"></span>
+          <h2>{{ selectedReport.title }}</h2>
+          <label class="report-type-control">
+            <span>Report Type</span>
+            <select [value]="selectedReportIndex" (change)="setReport($any($event.target).value)">
+              <option *ngFor="let report of reports; let i = index" [value]="i">{{ report.title }}</option>
+            </select>
+          </label>
+        </header>
+
+        <div class="report-form-body">
+          <p>{{ selectedReport.description }}</p>
+
+          <div class="report-field-grid">
+            <label *ngFor="let parameter of selectedReport.parameters">
+              <span>{{ parameter.label }}</span>
+              <select *ngIf="parameter.type === 'select'; else reportInput" [value]="parameter.value">
+                <option *ngFor="let option of parameter.options" [value]="option">{{ option }}</option>
+              </select>
+              <ng-template #reportInput>
+                <input [type]="parameter.type" [value]="parameter.value" [attr.step]="parameter.type === 'time' ? 1 : null" />
+              </ng-template>
+            </label>
+          </div>
+
+          <div class="report-export-row">
+            <button *ngFor="let exportType of selectedReport.exports" [ngClass]="exportType.toLowerCase()" type="button">{{ exportType }}</button>
+          </div>
+
+          <button class="report-reset" type="button">Clear Filters</button>
         </div>
-        <div class="export-row">
-          <button *ngFor="let type of report.exports" [ngClass]="type.toLowerCase()">{{ type }}</button>
-        </div>
-        <button class="clear-btn" type="button">Clear Filters</button>
       </article>
     </section>
   </section>
