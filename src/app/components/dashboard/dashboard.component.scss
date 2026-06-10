@@ -643,7 +643,7 @@ h2 {
 .main-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: minmax(250px, 1.04fr) minmax(220px, 0.98fr) minmax(250px, 0.9fr) minmax(260px, 1fr);
+  grid-template-rows: minmax(420px, 1.35fr) minmax(250px, 1.04fr) minmax(220px, 0.98fr) minmax(250px, 0.9fr) minmax(260px, 1fr);
   gap: 9px;
   min-height: 0;
   overflow-y: auto;
@@ -688,7 +688,7 @@ h2 {
 }
 
 .map-card {
-  grid-column: 1 / 5;
+  grid-column: 1 / 13;
   grid-row: 1;
 }
 
@@ -699,48 +699,16 @@ h2 {
   min-height: 0;
   overflow: hidden;
   border-radius: 6px;
-  background:
-    linear-gradient(40deg, transparent 0 45%, rgba(111, 190, 92, 0.85) 45% 47%, transparent 47%),
-    linear-gradient(150deg, transparent 0 50%, rgba(111, 190, 92, 0.7) 50% 52%, transparent 52%),
-    linear-gradient(90deg, transparent 0 38%, rgba(201, 168, 54, 0.65) 38% 40%, transparent 40%),
-    #14253b;
+  background: #14253b;
 }
 
 :host ::ng-deep app-map-view,
-:host ::ng-deep app-map-view #map {
+:host ::ng-deep app-map-view .map-container {
   display: block;
   height: 100%;
   min-height: 0;
-  opacity: 0.62;
+  opacity: 1;
 }
-
-.map-label,
-.map-pin {
-  position: absolute;
-  z-index: 2;
-}
-
-.map-label {
-  color: #f1f5ff;
-  font-weight: 800;
-  text-shadow: 0 1px 4px #000;
-}
-
-.ro { top: 12%; left: 26%; }
-.wz { top: 20%; left: 48%; }
-.nd { top: 63%; left: 50%; font-size: 1.1rem; }
-
-.map-pin {
-  width: 22px;
-  height: 22px;
-  border-radius: 50% 50% 50% 0;
-  background: #e45f4b;
-  transform: rotate(-45deg);
-}
-
-.map-pin.one { top: 43%; left: 28%; }
-.map-pin.two { top: 26%; left: 62%; }
-.map-pin.three { right: 10%; bottom: 22%; }
 
 .map-legend {
   display: flex;
@@ -776,8 +744,8 @@ h2 {
 .gray { background: #8f9aac; }
 
 .video-card {
-  grid-column: 5 / 10;
-  grid-row: 1;
+  grid-column: 1 / 7;
+  grid-row: 2;
 }
 
 .video-grid {
@@ -830,29 +798,29 @@ h2 {
 
 
 .alerts-card {
-  grid-column: 10 / 13;
-  grid-row: 1;
+  grid-column: 7 / 13;
+  grid-row: 2;
 }
 
 .vms-card {
   grid-column: 1 / 4;
-  grid-row: 2;
+  grid-row: 3;
 }
 
 .met-card {
   grid-column: 10 / 13;
-  grid-row: 3;
+  grid-row: 4;
   position: relative;
 }
 
 .vds-card {
   grid-column: 4 / 10;
-  grid-row: 2;
+  grid-row: 3;
 }
 
 .incident-card {
   grid-column: 10 / 13;
-  grid-row: 2;
+  grid-row: 3;
 }
 
 .alert-list {
@@ -1189,17 +1157,17 @@ dd {
 
 .health-card {
   grid-column: 1 / 7;
-  grid-row: 3;
+  grid-row: 4;
 }
 
 .system-card {
   grid-column: 1 / 13;
-  grid-row: 4;
+  grid-row: 5;
 }
 
 .activity-card {
   grid-column: 7 / 10;
-  grid-row: 3;
+  grid-row: 4;
 }
 
 .activity-card p {
@@ -1665,7 +1633,7 @@ dd {
 
   .map-surface,
   :host ::ng-deep app-map-view,
-  :host ::ng-deep app-map-view #map {
+  :host ::ng-deep app-map-view .map-container {
     min-height: 260px;
   }
 

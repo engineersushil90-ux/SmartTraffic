@@ -77,12 +77,6 @@
         </div>
         <div class="map-surface">
           <app-map-view></app-map-view>
-          <span class="map-label ro">Rohini</span>
-          <span class="map-label wz">Wazirpur</span>
-          <span class="map-label nd">New Delhi</span>
-          <span class="map-pin one"></span>
-          <span class="map-pin two"></span>
-          <span class="map-pin three"></span>
         </div>
         <div class="map-legend">
           <span *ngFor="let item of mapLegend"><b [class]="item.className"></b>{{ item.label }}</span>

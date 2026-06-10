@@ -1,3 +1,34 @@
 @if (isBrowser) {
-<div id="map"></div>
+<div class="map-stage">
+  <div #mapContainer class="map-container"></div>
+  <button
+    class="camera-overlay-marker"
+    type="button"
+    *ngFor="let camera of cameras"
+    [class.connected]="camera.status === 'Connected'"
+    [class.disconnected]="camera.status === 'Disconnected'"
+    [style.left.px]="camera.screenX"
+    [style.top.px]="camera.screenY"
+    [attr.aria-label]="camera.label + ' camera details'"
+    (click)="showCameraDetails(camera, $event)"
+  >
+    <span></span>
+  </button>
+
+  <div
+    class="camera-overlay-popup"
+    *ngIf="activeCamera"
+    [style.left.px]="activeCamera.screenX"
+    [style.top.px]="activeCamera.screenY"
+  >
+    <button type="button" aria-label="Close camera details" (click)="activeCamera = null">×</button>
+    <strong>{{ activeCamera.label }}</strong>
+    <span>Camera ID: {{ activeCamera.cameraId }}</span>
+    <span class="camera-status" [class.connected]="activeCamera.status === 'Connected'" [class.disconnected]="activeCamera.status === 'Disconnected'">
+      <i></i>{{ activeCamera.status }}
+    </span>
+    <span>Stream: {{ activeCamera.stream }}</span>
+    <span>Last seen: {{ activeCamera.lastSeen }}</span>
+  </div>
+</div>
 }

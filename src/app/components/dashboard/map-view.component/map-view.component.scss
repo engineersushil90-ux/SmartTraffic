@@ -2,9 +2,152 @@
   display: block;
 }
 
-#map {
-  width: 100%;
+.map-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
   height: clamp(360px, 48vh, 560px);
   min-height: 360px;
   background: #dfe8ef;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+}
+
+:host ::ng-deep .leaflet-container {
+  background: #dfe8ef;
+}
+
+.camera-overlay-marker {
+  position: absolute;
+  z-index: 500;
+  width: 38px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.camera-overlay-marker::before {
+  position: absolute;
+  top: 1px;
+  left: 9px;
+  width: 12px;
+  height: 5px;
+  content: "";
+  border-radius: 4px 4px 0 0;
+  background: #4f5f7a;
+}
+
+.camera-overlay-marker::after {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  width: 0;
+  height: 0;
+  content: "";
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 10px solid #64b85f;
+}
+
+.camera-overlay-marker span {
+  position: absolute;
+  top: 6px;
+  left: 2px;
+  display: grid;
+  width: 30px;
+  height: 22px;
+  place-items: center;
+  border-radius: 7px;
+  background: #64b85f;
+  box-shadow: 0 4px 12px rgba(19, 29, 47, 0.32);
+}
+
+.camera-overlay-marker span::after {
+  width: 10px;
+  height: 10px;
+  content: "";
+  border: 2px solid #eaf1ff;
+  border-radius: 50%;
+  background: #263b5f;
+}
+
+.camera-overlay-marker.disconnected::after {
+  border-left-color: #d86650;
+}
+
+.camera-overlay-marker.disconnected span {
+  background: #d86650;
+}
+
+.camera-overlay-popup {
+  position: absolute;
+  z-index: 600;
+  display: grid;
+  gap: 5px;
+  min-width: 188px;
+  padding: 14px 40px 14px 16px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #26344b;
+  font-size: 0.82rem;
+  box-shadow: 0 12px 30px rgba(19, 29, 47, 0.28);
+  transform: translate(-50%, calc(-100% - 24px));
+}
+
+.camera-overlay-popup::after {
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  content: "";
+  border-right: 14px solid transparent;
+  border-left: 14px solid transparent;
+  border-top: 14px solid #ffffff;
+  transform: translateX(-50%);
+}
+
+.camera-overlay-popup button {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.camera-overlay-popup strong {
+  color: #172235;
+  font-size: 1rem;
+}
+
+.camera-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 700;
+}
+
+.camera-status i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.camera-status.connected i {
+  background: #64b85f;
+}
+
+.camera-status.disconnected i {
+  background: #d86650;
 }
