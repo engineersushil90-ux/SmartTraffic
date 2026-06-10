@@ -12,9 +12,14 @@ interface MpegtsPlayer {
   unload(): void;
   detachMediaElement(): void;
   destroy(): void;
+  on?(event: string, handler: (...args: unknown[]) => void): void;
+  off?(event: string, handler: (...args: unknown[]) => void): void;
 }
 
 interface MpegtsFactory {
+  Events?: {
+    ERROR?: string;
+  };
   isSupported(): boolean;
   createPlayer(mediaDataSource: { type: 'flv'; url: string; isLive: boolean }, config?: Record<string, unknown>): MpegtsPlayer;
 }
@@ -36,7 +41,10 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   private readonly dashboardData = this.dashboardDataService.getDashboardData();
   private readonly flvPlayers = new Map<HTMLVideoElement, MpegtsPlayer>();
   private readonly flvStartTimers = new Map<HTMLVideoElement, number>();
+  private readonly flvErrorHandlers = new Map<HTMLVideoElement, { event: string; handler: (...args: unknown[]) => void }>();
   private readonly bufferedPlaybackStarted = new WeakSet<HTMLVideoElement>();
+  private readonly streamWarnings = new Set<string>();
+  private readonly streamOnline = new Set<string>();
   private mpegtsLoader: Promise<MpegtsFactory | null> | null = null;
 
   isLightTheme = false;
@@ -119,6 +127,20 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     this.isLightTheme = !this.isLightTheme;
   }
 
+  isStreamWarning(feed: { label: string; streamType: string; streamUrl?: string }): boolean {
+    return feed.streamType === 'placeholder' || !feed.streamUrl || !this.streamOnline.has(feed.label) || this.streamWarnings.has(feed.label);
+  }
+
+  markStreamOnline(feedLabel: string): void {
+    this.streamOnline.add(feedLabel);
+    this.streamWarnings.delete(feedLabel);
+  }
+
+  markStreamWarning(feedLabel: string): void {
+    this.streamOnline.delete(feedLabel);
+    this.streamWarnings.add(feedLabel);
+  }
+
   toggleFullscreen(): void {
     const documentElement = document.documentElement;
 
@@ -140,6 +162,12 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   applyLiveBuffer(event: Event, bufferSeconds = 2): void {
     const video = event.target as HTMLVideoElement;
+    const feedLabel = video.dataset['feedLabel'];
+
+    if (feedLabel) {
+      this.markStreamOnline(feedLabel);
+    }
+
     const liveEdge = this.getLiveEdge(video);
 
     if (liveEdge !== null) {
@@ -151,6 +179,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   playWhenBuffered(event: Event, bufferSeconds = 5): void {
     const video = event.target as HTMLVideoElement;
+    const feedLabel = video.dataset['feedLabel'];
     const requiredBuffer = Math.max(1, bufferSeconds);
 
     if (this.bufferedPlaybackStarted.has(video) || this.getBufferedAhead(video) < requiredBuffer) {
@@ -158,6 +187,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     }
 
     this.bufferedPlaybackStarted.add(video);
+    if (feedLabel) {
+      this.markStreamOnline(feedLabel);
+    }
 
     const timer = this.flvStartTimers.get(video);
     if (timer !== undefined) {
@@ -172,10 +204,15 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   maintainLiveBuffer(event: Event, bufferSeconds = 2): void {
     const video = event.target as HTMLVideoElement;
+    const feedLabel = video.dataset['feedLabel'];
     const liveEdge = this.getLiveEdge(video);
 
     if (liveEdge === null) {
       return;
+    }
+
+    if (feedLabel) {
+      this.markStreamOnline(feedLabel);
     }
 
     const targetTime = Math.max(0, liveEdge - bufferSeconds);
@@ -231,6 +268,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   private async createFlvPlayer(video: HTMLVideoElement): Promise<void> {
     const streamUrl = video.dataset['streamUrl'];
+    const feedLabel = video.dataset['feedLabel'];
 
     if (!streamUrl) {
       return;
@@ -239,6 +277,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     const mpegts = await this.loadMpegts();
 
     if (!mpegts?.isSupported()) {
+      if (feedLabel) {
+        this.markStreamWarning(feedLabel);
+      }
       return;
     }
 
@@ -258,6 +299,17 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     player.attachMediaElement(video);
     player.load();
     this.flvPlayers.set(video, player);
+
+    const errorEvent = mpegts.Events?.ERROR;
+    if (errorEvent && player.on) {
+      const handler = () => {
+        if (feedLabel) {
+          this.markStreamWarning(feedLabel);
+        }
+      };
+      player.on(errorEvent, handler);
+      this.flvErrorHandlers.set(video, { event: errorEvent, handler });
+    }
 
     const timer = window.setTimeout(() => {
       if (!this.bufferedPlaybackStarted.has(video)) {
@@ -300,10 +352,16 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   private destroyFlvPlayer(video: HTMLVideoElement, player: MpegtsPlayer): void {
     const timer = this.flvStartTimers.get(video);
+    const errorHandler = this.flvErrorHandlers.get(video);
 
     if (timer !== undefined) {
       window.clearTimeout(timer);
       this.flvStartTimers.delete(video);
+    }
+
+    if (errorHandler && player.off) {
+      player.off(errorHandler.event, errorHandler.handler);
+      this.flvErrorHandlers.delete(video);
     }
 
     player.unload();
