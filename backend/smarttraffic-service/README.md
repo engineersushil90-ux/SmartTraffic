@@ -2,7 +2,7 @@
 
 Parent Windows service for the SmartTraffic backend bundle.
 
-This service starts and monitors backend server processes:
+This service only starts and stops backend server processes:
 
 ```text
 ATCC Service      -> http://localhost:8091
@@ -42,12 +42,6 @@ Installed Windows service:
 
 ```text
 Smarttraffic-Service
-```
-
-## Health
-
-```text
-GET http://localhost:8079/healthz
 ```
 
 ## Uninstall

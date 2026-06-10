@@ -21,6 +21,7 @@ import (
 	"smarttraffic/gateway/internal/server"
 	"smarttraffic/gateway/internal/services"
 	"smarttraffic/gateway/internal/stream"
+	"smarttraffic/gateway/internal/upstreams"
 )
 
 const (
@@ -109,6 +110,7 @@ func runGateway(ctx context.Context) error {
 	runner := stream.NewFFmpegRunner(cfg.FFmpegPath, cfg.InputURL, cfg.RTSPTransport, hub)
 
 	registry := services.NewRegistry()
+	checkGatewayUpstreams(ctx, cfg)
 
 	go runner.RunLoop(ctx)
 
@@ -134,6 +136,20 @@ func runGateway(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func checkGatewayUpstreams(ctx context.Context, cfg config.Config) {
+	checkCtx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	checker := upstreams.NewChecker(upstreams.ServiceSpecs(cfg.ATCCServiceURL, cfg.PTZServiceURL))
+	for _, status := range checker.CheckAll(checkCtx) {
+		if status.Connected {
+			log.Printf("%s service connected at %s", status.Name, status.URL)
+			continue
+		}
+		log.Printf("%s service disconnected at %s: %s", status.Name, status.URL, status.Error)
+	}
 }
 
 func handleServiceAction(action string) error {

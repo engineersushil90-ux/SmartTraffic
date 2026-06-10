@@ -48,10 +48,8 @@ cd backend/smarttraffic-service
 .\smarttraffic-service.exe -service uninstall
 ```
 
-## Health
+Use the gateway health endpoint to verify the running bundle:
 
 ```text
-GET http://localhost:8079/healthz
+GET http://localhost:8080/healthz
 ```
-
-The parent health response shows whether ATCC, PTZ, and Gateway are reachable.

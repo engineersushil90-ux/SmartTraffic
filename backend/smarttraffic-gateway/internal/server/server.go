@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -12,24 +13,27 @@ import (
 	"smarttraffic/gateway/internal/config"
 	"smarttraffic/gateway/internal/services"
 	"smarttraffic/gateway/internal/stream"
+	"smarttraffic/gateway/internal/upstreams"
 )
 
 type Server struct {
-	cfg       config.Config
-	hub       *stream.Hub
-	services  *services.Registry
-	atccProxy *httputil.ReverseProxy
-	ptzProxy  *httputil.ReverseProxy
+	cfg             config.Config
+	hub             *stream.Hub
+	services        *services.Registry
+	upstreamChecker *upstreams.Checker
+	atccProxy       *httputil.ReverseProxy
+	ptzProxy        *httputil.ReverseProxy
 }
 
 type statusResponse struct {
-	OK          bool             `json:"ok"`
-	InputURL    string           `json:"inputUrl"`
-	StreamURL   string           `json:"streamUrl"`
-	BufferBytes int              `json:"bufferBytes"`
-	ATCCService string           `json:"atccService"`
-	PTZService  string           `json:"ptzService"`
-	Services    []map[string]any `json:"services"`
+	OK          bool               `json:"ok"`
+	InputURL    string             `json:"inputUrl"`
+	StreamURL   string             `json:"streamUrl"`
+	BufferBytes int                `json:"bufferBytes"`
+	ATCCService string             `json:"atccService"`
+	PTZService  string             `json:"ptzService"`
+	Upstreams   []upstreams.Status `json:"upstreams"`
+	Services    []map[string]any   `json:"services"`
 }
 
 type ptzRequest struct {
@@ -37,7 +41,12 @@ type ptzRequest struct {
 }
 
 func New(cfg config.Config, hub *stream.Hub, registry *services.Registry) *http.Server {
-	app := &Server{cfg: cfg, hub: hub, services: registry}
+	app := &Server{
+		cfg:             cfg,
+		hub:             hub,
+		services:        registry,
+		upstreamChecker: upstreams.NewChecker(upstreams.ServiceSpecs(cfg.ATCCServiceURL, cfg.PTZServiceURL)),
+	}
 	app.atccProxy = newReverseProxy(cfg.ATCCServiceURL, "ATCC service")
 	app.ptzProxy = newReverseProxy(cfg.PTZServiceURL, "PTZ service")
 	mux := http.NewServeMux()
@@ -131,7 +140,13 @@ func (s *Server) handleServiceSummaries(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	writeJSON(w, map[string]any{"services": s.services.Summaries()})
+	checkCtx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+	defer cancel()
+
+	writeJSON(w, map[string]any{
+		"upstreams": s.upstreamChecker.CheckAll(checkCtx),
+		"services":  s.services.Summaries(),
+	})
 }
 
 func (s *Server) handleDeviceCollection(service *services.DeviceService) http.HandlerFunc {
@@ -181,13 +196,26 @@ func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	checkCtx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+	defer cancel()
+	upstreamStatuses := s.upstreamChecker.CheckAll(checkCtx)
+
+	ok := true
+	for _, status := range upstreamStatuses {
+		if !status.Connected {
+			ok = false
+			break
+		}
+	}
+
 	writeJSON(w, statusResponse{
-		OK:          true,
+		OK:          ok,
 		InputURL:    s.cfg.InputURL,
 		StreamURL:   "http://localhost" + s.cfg.Addr + "/live",
 		BufferBytes: s.cfg.BufferBytes,
 		ATCCService: s.cfg.ATCCServiceURL,
 		PTZService:  s.cfg.PTZServiceURL,
+		Upstreams:   upstreamStatuses,
 		Services:    s.services.Summaries(),
 	})
 }

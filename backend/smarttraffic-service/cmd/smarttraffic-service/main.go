@@ -5,9 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 	"time"
 
 	"golang.org/x/sys/windows/svc"
@@ -17,7 +18,6 @@ import (
 
 	"smarttraffic/smarttraffic-service/internal/config"
 	"smarttraffic/smarttraffic-service/internal/manager"
-	"smarttraffic/smarttraffic-service/internal/server"
 )
 
 const (
@@ -54,7 +54,10 @@ func main() {
 		return
 	}
 
-	if err := run(context.Background()); err != nil && err != http.ErrServerClosed {
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
+
+	if err := run(ctx); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -82,7 +85,7 @@ func (s windowsService) Execute(_ []string, requests <-chan svc.ChangeRequest, c
 				return false, 0
 			}
 		case err := <-errs:
-			if err != nil && err != http.ErrServerClosed {
+			if err != nil {
 				return false, 1
 			}
 			return false, 0
@@ -100,21 +103,18 @@ func run(ctx context.Context) error {
 	services.StartAll(ctx)
 	defer services.StopAll()
 
-	srv := server.New(cfg, services)
-	errs := make(chan error, 1)
-	go func() {
-		log.Printf("Smarttraffic-Service listening on %s", cfg.Addr)
-		errs <- srv.ListenAndServe()
-	}()
-
-	select {
-	case <-ctx.Done():
-		shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		return srv.Shutdown(shutdownCtx)
-	case err := <-errs:
-		return err
+	for _, status := range services.Statuses() {
+		if status.Error != "" {
+			log.Printf("service name=%s running=%t error=%s executable=%s", status.Name, status.Running, status.Error, status.Executable)
+			continue
+		}
+		log.Printf("service name=%s running=%t pid=%d executable=%s", status.Name, status.Running, status.PID, status.Executable)
 	}
+
+	log.Printf("Smarttraffic-Service started all services")
+	<-ctx.Done()
+	log.Printf("Smarttraffic-Service stopping all services")
+	return nil
 }
 
 func handleServiceAction(action string) error {
