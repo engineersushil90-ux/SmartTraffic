@@ -1,9 +1,11 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -110,25 +112,44 @@ func (s *PTZService) SendCommand(cameraID string, command string) (PTZCommandRes
 }
 
 type Registry struct {
-	ATCC        *DeviceService
-	VIDS        *DeviceService
-	PTZCameras  *PTZService
-	CCTVCameras *DeviceService
-	MET         *DeviceService
-	VMS         *DeviceService
-	VSDS        *DeviceService
+	mu           sync.RWMutex
+	managed      bool
+	serviceState map[string]ManagedServiceStatus
+	ATCC         *DeviceService
+	VIDS         *DeviceService
+	PTZCameras   *PTZService
+	CCTVCameras  *DeviceService
+	MET          *DeviceService
+	VMS          *DeviceService
+	VSDS         *DeviceService
+}
+
+type ManagedServiceStatus struct {
+	Name      string    `json:"name"`
+	Managed   bool      `json:"managed"`
+	Running   bool      `json:"running"`
+	Mode      string    `json:"mode"`
+	StartedAt time.Time `json:"startedAt,omitempty"`
+	Error     string    `json:"error,omitempty"`
 }
 
 func NewRegistry() *Registry {
-	return &Registry{
-		ATCC:        NewATCCService(),
-		VIDS:        NewVIDSService(),
-		PTZCameras:  NewPTZCameraService(),
-		CCTVCameras: NewCCTVCameraService(),
-		MET:         NewMETService(),
-		VMS:         NewVMSService(),
-		VSDS:        NewVSDSService(),
+	registry := &Registry{
+		serviceState: make(map[string]ManagedServiceStatus),
+		ATCC:         NewATCCService(),
+		VIDS:         NewVIDSService(),
+		PTZCameras:   NewPTZCameraService(),
+		CCTVCameras:  NewCCTVCameraService(),
+		MET:          NewMETService(),
+		VMS:          NewVMSService(),
+		VSDS:         NewVSDSService(),
 	}
+
+	for _, name := range registry.serviceNames() {
+		registry.serviceState[name] = ManagedServiceStatus{Name: name, Mode: "internal"}
+	}
+
+	return registry
 }
 
 func (r *Registry) Summaries() []map[string]any {
@@ -141,4 +162,50 @@ func (r *Registry) Summaries() []map[string]any {
 		r.VMS.Summary(),
 		r.VSDS.Summary(),
 	}
+}
+
+func (r *Registry) StartAll(ctx context.Context) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	r.managed = true
+	startedAt := time.Now().UTC()
+	for _, name := range r.serviceNames() {
+		r.serviceState[name] = ManagedServiceStatus{
+			Name:      name,
+			Managed:   true,
+			Running:   ctx.Err() == nil,
+			Mode:      "internal",
+			StartedAt: startedAt,
+		}
+	}
+}
+
+func (r *Registry) StopAll() {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	for _, name := range r.serviceNames() {
+		status := r.serviceState[name]
+		status.Running = false
+		r.serviceState[name] = status
+	}
+}
+
+func (r *Registry) ManagedStatuses() []ManagedServiceStatus {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	statuses := make([]ManagedServiceStatus, 0, len(r.serviceState))
+	for _, name := range r.serviceNames() {
+		status := r.serviceState[name]
+		status.Managed = r.managed
+		statuses = append(statuses, status)
+	}
+
+	return statuses
+}
+
+func (r *Registry) serviceNames() []string {
+	return []string{"atcc", "vids", "ptz-cameras", "cctv-cameras", "met", "vms", "vsds"}
 }

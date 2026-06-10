@@ -1,8 +1,8 @@
 # SmartTraffic Gateway
 
-Go backend gateway for the SmartTraffic service bundle and live camera streaming.
+Gateway API for the SmartTraffic service bundle and live camera streaming.
 
-It starts and connects bundled SmartTraffic backend services, then exposes them through one gateway API. It also reads an RTSP stream with FFmpeg, keeps a rolling byte buffer, and serves an HTTP-FLV stream for the Angular dashboard.
+The gateway works as a client/proxy to backend server services like ATCC and PTZ. It also reads an RTSP stream with FFmpeg, keeps a rolling byte buffer, and serves an HTTP-FLV stream for the Angular dashboard.
 
 ## Structure
 
@@ -11,9 +11,8 @@ backend/smarttraffic-gateway/
   cmd/smarttraffic-gateway/  App entrypoint
   internal/config/           Environment config
   internal/server/           HTTP routes, CORS, health, PTZ stub
-  internal/services/         Separate ATCC, VIDS, PTZ, CCTV, MET, VMS, VSDS services
+  internal/services/         Local fallback/static services for unsplit domains
   internal/stream/           FFmpeg runner and buffered stream hub
-  internal/supervisor/       Starts and monitors bundled service processes
   go.mod
 ```
 
@@ -53,8 +52,7 @@ STREAM_RTSP_TRANSPORT=tcp
 STREAM_BUFFER_BYTES=4194304
 FFMPEG_PATH=ffmpeg
 ATCC_SERVICE_URL=http://localhost:8091
-ATCC_SERVICE_EXE=..\atcc-service\atcc-service.exe
-SMARTTRAFFIC_MANAGE_SERVICES=true
+PTZ_SERVICE_URL=http://localhost:8092
 ```
 
 Example:
@@ -92,39 +90,15 @@ POST /api/ptz/{cameraId}
 
 Each device endpoint returns a service-owned JSON payload with `id`, `name`, `category`, `location`, `status`, `lastSeen`, optional `streamUrl`, and service-specific `details`.
 
-ATCC routes are proxied to the standalone ATCC service configured by `ATCC_SERVICE_URL`.
-
-When `SMARTTRAFFIC_MANAGE_SERVICES=true`, the gateway starts the bundled ATCC service executable configured by `ATCC_SERVICE_EXE`. `/healthz` includes `managedServices` so you can see whether each bundled service is running.
+ATCC and PTZ routes are proxied to their server services. The parent `Smarttraffic-Service` is responsible for starting those service processes.
 
 `/api/ptz/{cameraId}` validates the camera through the PTZ Camera service before accepting a command. Wire `internal/services` to your database, ONVIF service, or camera vendor APIs when ready.
 
-## Install Gateway As Windows Service
+## Run Gateway Directly
 
-Run PowerShell as Administrator:
-
-```powershell
-cd backend
-.\scripts\install-gateway-service.ps1
-```
-
-This builds:
-
-```text
-backend/atcc-service/atcc-service.exe
-backend/smarttraffic-gateway/smarttraffic-gateway.exe
-```
-
-Then it installs only the SmartTraffic Gateway Windows service:
-
-```text
-SmartTrafficGatewayService
-```
-
-The gateway starts the ATCC service process automatically.
-
-To uninstall:
+Normally, `Smarttraffic-Service` starts the gateway. For development:
 
 ```powershell
-cd backend
-.\scripts\uninstall-gateway-service.ps1
+cd backend/smarttraffic-gateway
+go run ./cmd/smarttraffic-gateway
 ```

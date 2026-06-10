@@ -1,50 +1,57 @@
 # SmartTraffic Backend Bundle
 
-SmartTraffic backend is a bundle of service executables managed by the SmartTraffic Gateway.
+SmartTraffic backend is a bundle managed by the parent `Smarttraffic-Service` Windows service.
 
-Install and start the gateway service, and it starts/connects the bundled services such as ATCC.
+`Smarttraffic-Service` starts backend server processes such as ATCC and PTZ, then starts the SmartTraffic Gateway. The gateway works as a client/proxy to ATCC and PTZ.
 
-## Build Bundle
+## Build Services
 
 ```powershell
-cd backend
-.\scripts\build-bundle.ps1
+cd backend/atcc-service
+go build -o atcc-service.exe ./cmd/atcc-service
+
+cd ../ptz-service
+go build -o ptz-service.exe ./cmd/ptz-service
+
+cd ../smarttraffic-gateway
+go build -o smarttraffic-gateway.exe ./cmd/smarttraffic-gateway
+
+cd ../smarttraffic-service
+go build -o smarttraffic-service.exe ./cmd/smarttraffic-service
 ```
 
-## Install Gateway Service
+## Install Parent Service
 
 Run PowerShell as Administrator:
 
 ```powershell
-cd backend
-.\scripts\install-gateway-service.ps1
+cd backend/smarttraffic-service
+.\smarttraffic-service.exe -service install
+.\smarttraffic-service.exe -service start
 ```
 
 Installed Windows service:
 
 ```text
-SmartTrafficGatewayService
+Smarttraffic-Service
 ```
 
-The gateway starts:
+The parent service starts ATCC, PTZ, and Gateway.
 
-```text
-backend/atcc-service/atcc-service.exe
-```
-
-## Uninstall Gateway Service
+## Uninstall Parent Service
 
 Run PowerShell as Administrator:
 
 ```powershell
-cd backend
-.\scripts\uninstall-gateway-service.ps1
+cd backend/smarttraffic-service
+.\smarttraffic-service.exe -service stop
+.\smarttraffic-service.exe -service uninstall
 ```
 
 ## Health
 
 ```text
-GET http://localhost:8080/healthz
+GET http://localhost:8079/healthz
 ```
 
-The health response includes `managedServices`, showing which services the gateway started and whether they are reachable.
+The parent health response shows whether ATCC, PTZ, and Gateway are reachable.

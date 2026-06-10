@@ -19,8 +19,8 @@ import (
 
 	"smarttraffic/gateway/internal/config"
 	"smarttraffic/gateway/internal/server"
+	"smarttraffic/gateway/internal/services"
 	"smarttraffic/gateway/internal/stream"
-	"smarttraffic/gateway/internal/supervisor"
 )
 
 const (
@@ -108,20 +108,11 @@ func runGateway(ctx context.Context) error {
 	hub := stream.NewHub(cfg.BufferBytes)
 	runner := stream.NewFFmpegRunner(cfg.FFmpegPath, cfg.InputURL, cfg.RTSPTransport, hub)
 
-	services := supervisor.New(cfg.ManageServices, []supervisor.ServiceSpec{
-		{
-			Name:       "atcc",
-			URL:        cfg.ATCCServiceURL,
-			HealthURL:  cfg.ATCCServiceURL + "/healthz",
-			Executable: cfg.ATCCServiceExecutable,
-		},
-	})
-	services.Start(ctx)
-	defer services.Stop()
+	registry := services.NewRegistry()
 
 	go runner.RunLoop(ctx)
 
-	app := server.New(cfg, hub, services.Statuses)
+	app := server.New(cfg, hub, registry)
 	errs := make(chan error, 1)
 
 	go func() {

@@ -1,8 +1,8 @@
 # SmartTraffic ATCC Service
 
-Standalone ATCC backend service for traffic classification/count devices.
+Optional standalone ATCC backend service for traffic classification/count devices.
 
-In the SmartTraffic bundle, this service is normally started by `SmartTrafficGatewayService`. You can still run it directly during development, or install it separately only when you intentionally want ATCC to be managed outside the gateway.
+The main SmartTraffic runtime now starts ATCC internally inside `SmartTrafficGatewayService`. Use this standalone service only if you intentionally want ATCC outside the gateway process.
 
 ## Endpoints
 
