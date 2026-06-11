@@ -66,9 +66,20 @@
             <h1>System Health</h1>
             <p>Gateway server and connected service clients</p>
           </div>
-          <button class="refresh-health" type="button" (click)="refreshSystemHealth()" [disabled]="systemHealthLoading">
-            {{ systemHealthLoading ? 'Refreshing' : 'Refresh' }}
-          </button>
+          <div class="health-actions">
+            <button
+              class="auto-refresh-toggle"
+              type="button"
+              [class.active]="systemHealthAutoRefresh"
+              [attr.aria-pressed]="systemHealthAutoRefresh"
+              (click)="toggleSystemHealthAutoRefresh()"
+            >
+              Auto Refresh
+            </button>
+            <button class="refresh-health" type="button" (click)="refreshSystemHealth()" [disabled]="systemHealthLoading">
+              Refresh
+            </button>
+          </div>
         </div>
 
         <div class="health-summary-grid">

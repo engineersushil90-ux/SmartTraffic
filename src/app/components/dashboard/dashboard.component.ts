@@ -49,11 +49,6 @@ interface GatewayHealth {
   services: ServiceSummary[];
 }
 
-interface ServicesResponse {
-  upstreams: UpstreamStatus[];
-  services: ServiceSummary[];
-}
-
 interface SystemHealthRow {
   name: string;
   mode: string;
@@ -119,6 +114,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   systemHealthError = '';
   gatewayHealth: GatewayHealth | null = null;
   systemHealthRows: SystemHealthRow[] = [];
+  systemHealthAutoRefresh = true;
   private systemHealthTimer?: number;
 
   get systemHealthTotals(): { total: number; online: number; warning: number; offline: number } {
@@ -134,11 +130,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngOnInit(): void {
     void this.refreshSystemHealth();
-    this.systemHealthTimer = window.setInterval(() => {
-      if (this.activeBody === 'system-health') {
-        void this.refreshSystemHealth();
-      }
-    }, 10000);
+    this.startSystemHealthAutoRefresh();
   }
 
   ngAfterViewInit(): void {
@@ -159,6 +151,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
         this.activeBody = item.route;
         if (item.route === 'system-health') {
           void this.refreshSystemHealth();
+          this.startSystemHealthAutoRefresh();
+        } else {
+          this.stopSystemHealthAutoRefresh();
         }
       }
       this.activeTopTab = item.label;
@@ -235,16 +230,17 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   async refreshSystemHealth(): Promise<void> {
+    if (this.systemHealthLoading) {
+      return;
+    }
+
     this.systemHealthLoading = true;
     this.systemHealthError = '';
 
     try {
-      const [health, services] = await Promise.all([
-        this.fetchGatewayJSON<GatewayHealth>('/healthz'),
-        this.fetchGatewayJSON<ServicesResponse>('/api/services'),
-      ]);
+      const health = await this.fetchGatewayJSON<GatewayHealth>('/healthz');
       this.gatewayHealth = health;
-      this.systemHealthRows = this.buildSystemHealthRows(services, health);
+      this.systemHealthRows = this.buildSystemHealthRows(health);
       this.systemHealthUpdatedAt = new Intl.DateTimeFormat('en-IN', {
         hour: '2-digit',
         minute: '2-digit',
@@ -257,9 +253,42 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-  private buildSystemHealthRows(response: ServicesResponse, health: GatewayHealth): SystemHealthRow[] {
-    const upstreams = response.upstreams ?? health.upstreams ?? [];
-    const services = response.services ?? health.services ?? [];
+  toggleSystemHealthAutoRefresh(): void {
+    this.systemHealthAutoRefresh = !this.systemHealthAutoRefresh;
+
+    if (this.systemHealthAutoRefresh) {
+      this.startSystemHealthAutoRefresh();
+      void this.refreshSystemHealth();
+      return;
+    }
+
+    this.stopSystemHealthAutoRefresh();
+  }
+
+  private startSystemHealthAutoRefresh(): void {
+    if (!this.systemHealthAutoRefresh || this.systemHealthTimer !== undefined) {
+      return;
+    }
+
+    this.systemHealthTimer = window.setInterval(() => {
+      if (this.activeBody === 'system-health') {
+        void this.refreshSystemHealth();
+      }
+    }, 10000);
+  }
+
+  private stopSystemHealthAutoRefresh(): void {
+    if (this.systemHealthTimer === undefined) {
+      return;
+    }
+
+    window.clearInterval(this.systemHealthTimer);
+    this.systemHealthTimer = undefined;
+  }
+
+  private buildSystemHealthRows(health: GatewayHealth): SystemHealthRow[] {
+    const upstreams = health.upstreams ?? [];
+    const services = health.services ?? [];
     const upstreamByName = new Map(upstreams.map(upstream => [this.normalizeServiceName(upstream.name), upstream]));
     const rows: SystemHealthRow[] = [
       {
@@ -323,7 +352,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
 
     for (const url of urls) {
       try {
-        const response = await fetch(url, { headers: { Accept: 'application/json' } });
+        const response = await this.fetchWithTimeout(url);
         if (!response.ok) {
           throw new Error(`${url} returned ${response.status}`);
         }
@@ -334,6 +363,20 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     throw lastError instanceof Error ? lastError : new Error('Gateway health API unavailable');
+  }
+
+  private async fetchWithTimeout(url: string): Promise<Response> {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 5000);
+
+    try {
+      return await fetch(url, {
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
+      });
+    } finally {
+      window.clearTimeout(timeout);
+    }
   }
 
   private displayServiceName(category: string): string {

@@ -64,6 +64,12 @@ body {
   gap: 16px;
 }
 
+.health-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .health-page-head h1 {
   margin: 0;
   color: #fff;
@@ -86,6 +92,57 @@ body {
   color: #fff;
   font-weight: 800;
   cursor: pointer;
+}
+
+.auto-refresh-toggle {
+  position: relative;
+  min-width: 136px;
+  height: 36px;
+  padding: 0 42px 0 13px;
+  border: 1px solid rgba(119, 146, 201, 0.28);
+  border-radius: 6px;
+  background: rgba(26, 43, 68, 0.72);
+  color: #aeb8ca;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: left;
+}
+
+.auto-refresh-toggle::before {
+  position: absolute;
+  top: 9px;
+  right: 11px;
+  width: 26px;
+  height: 16px;
+  content: "";
+  border-radius: 999px;
+  background: #566579;
+}
+
+.auto-refresh-toggle::after {
+  position: absolute;
+  top: 11px;
+  right: 23px;
+  width: 12px;
+  height: 12px;
+  content: "";
+  border-radius: 50%;
+  background: #dbe3f2;
+  transition: right 0.16s ease;
+}
+
+.auto-refresh-toggle.active {
+  border-color: rgba(117, 165, 255, 0.42);
+  background: rgba(41, 74, 126, 0.7);
+  color: #fff;
+}
+
+.auto-refresh-toggle.active::before {
+  background: #65b96a;
+}
+
+.auto-refresh-toggle.active::after {
+  right: 13px;
 }
 
 .refresh-health:disabled {
@@ -227,7 +284,8 @@ body {
 }
 
 .light-theme .health-summary-card,
-.light-theme .health-table-row {
+.light-theme .health-table-row,
+.light-theme .auto-refresh-toggle {
   border-color: rgba(125, 142, 169, 0.2);
   background: #fff;
   color: #26344b;
@@ -254,6 +312,11 @@ body {
   }
 
   .health-page-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .health-actions {
     align-items: stretch;
     flex-direction: column;
   }
