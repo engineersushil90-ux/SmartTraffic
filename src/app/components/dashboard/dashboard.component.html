@@ -59,6 +59,79 @@
       <app-atcc [embedded]="true" [section]="activeAtccSection"></app-atcc>
     </ng-container>
 
+    <ng-container *ngIf="activeBody === 'system-health'">
+      <section class="system-health-page" aria-label="System health">
+        <div class="health-page-head">
+          <div>
+            <h1>System Health</h1>
+            <p>Gateway server and connected service clients</p>
+          </div>
+          <button class="refresh-health" type="button" (click)="refreshSystemHealth()" [disabled]="systemHealthLoading">
+            {{ systemHealthLoading ? 'Refreshing' : 'Refresh' }}
+          </button>
+        </div>
+
+        <div class="health-summary-grid">
+          <article class="health-summary-card">
+            <span>Total Services</span>
+            <strong>{{ systemHealthTotals.total }}</strong>
+            <em>{{ systemHealthUpdatedAt ? 'Updated ' + systemHealthUpdatedAt : 'Waiting for gateway' }}</em>
+          </article>
+          <article class="health-summary-card online">
+            <span>Online</span>
+            <strong>{{ systemHealthTotals.online }}</strong>
+            <em>Healthy and reachable</em>
+          </article>
+          <article class="health-summary-card warning">
+            <span>Warning</span>
+            <strong>{{ systemHealthTotals.warning }}</strong>
+            <em>Connected with alerts</em>
+          </article>
+          <article class="health-summary-card offline">
+            <span>Offline</span>
+            <strong>{{ systemHealthTotals.offline }}</strong>
+            <em>Not reachable</em>
+          </article>
+        </div>
+
+        <p class="health-error" *ngIf="systemHealthError">{{ systemHealthError }}</p>
+
+        <article class="panel health-table-card">
+          <div class="panel-head">
+            <h2>All Service Status</h2>
+            <a>{{ gatewayHealth?.ok ? 'Gateway Online' : 'Gateway Warning' }}</a>
+          </div>
+
+          <div class="health-table" role="table" aria-label="All service status">
+            <div class="health-table-row head" role="row">
+              <span role="columnheader">Service</span>
+              <span role="columnheader">Mode</span>
+              <span role="columnheader">Status</span>
+              <span role="columnheader">Devices</span>
+              <span role="columnheader">Endpoint</span>
+              <span role="columnheader">Message</span>
+            </div>
+
+            <div class="health-table-row" role="row" *ngFor="let service of systemHealthRows">
+              <span role="cell">
+                <b class="status-dot" [ngClass]="service.status"></b>
+                {{ service.name }}
+              </span>
+              <span role="cell">{{ service.mode }}</span>
+              <span role="cell"><em class="status-pill" [ngClass]="service.status">{{ service.status }}</em></span>
+              <span role="cell">
+                {{ service.connected }} online
+                <small *ngIf="service.warning"> | {{ service.warning }} warning</small>
+                <small *ngIf="service.disconnected"> | {{ service.disconnected }} offline</small>
+              </span>
+              <span role="cell" class="endpoint" [attr.title]="service.url">{{ service.url }}</span>
+              <span role="cell" class="message" [attr.title]="service.message">{{ service.message }}</span>
+            </div>
+          </div>
+        </article>
+      </section>
+    </ng-container>
+
     <ng-container *ngIf="activeBody === '' || activeBody === 'dashboard'">
       <section class="kpi-grid" aria-label="Traffic summary">
         <article class="metric-card" *ngFor="let kpi of kpis" [attr.title]="kpi.label + ': ' + kpi.value + (kpi.unit ? ' ' + kpi.unit : '')">

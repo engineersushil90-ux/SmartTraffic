@@ -49,3 +49,212 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+.system-health-page {
+  display: grid;
+  gap: 12px;
+  min-height: 0;
+  padding: 6px 4px 48px 0;
+}
+
+.health-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.health-page-head h1 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.health-page-head p {
+  margin: 5px 0 0;
+  color: #9faac0;
+  font-weight: 700;
+}
+
+.refresh-health {
+  min-width: 96px;
+  height: 36px;
+  border: 1px solid rgba(119, 146, 201, 0.28);
+  border-radius: 6px;
+  background: #294a7e;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.refresh-health:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.health-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.health-summary-card {
+  min-height: 96px;
+  padding: 14px;
+  border: 1px solid rgba(119, 146, 201, 0.16);
+  border-radius: 7px;
+  background: linear-gradient(145deg, rgba(25, 42, 66, 0.94), rgba(14, 27, 45, 0.97));
+}
+
+.health-summary-card span,
+.health-summary-card em {
+  display: block;
+  color: #aeb8ca;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.health-summary-card strong {
+  display: block;
+  margin: 9px 0 7px;
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.health-summary-card.online strong { color: #72c46f; }
+.health-summary-card.warning strong { color: #e5bf48; }
+.health-summary-card.offline strong { color: #e16a50; }
+
+.health-error {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(224, 102, 80, 0.34);
+  border-radius: 6px;
+  background: rgba(224, 102, 80, 0.12);
+  color: #ffc2b6;
+  font-weight: 800;
+}
+
+.health-table-card {
+  min-height: 0;
+}
+
+.health-table {
+  display: grid;
+  gap: 6px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.health-table-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1.1fr) 96px 104px minmax(150px, 1fr) minmax(170px, 1.25fr) minmax(170px, 1.25fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: rgba(26, 43, 68, 0.72);
+  color: #dbe3f2;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.health-table-row.head {
+  min-height: 34px;
+  background: rgba(119, 146, 201, 0.12);
+  color: #9faac0;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+}
+
+.health-table-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #8f9aac;
+}
+
+.status-dot.online,
+.status-pill.online { background: #65b96a; }
+.status-dot.warning,
+.status-pill.warning { background: #d9ad3d; }
+.status-dot.offline,
+.status-pill.offline { background: #d96d4f; }
+
+.status-pill {
+  display: inline-grid;
+  min-width: 74px;
+  height: 24px;
+  place-items: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.health-table small {
+  color: #aeb8ca;
+  font-size: inherit;
+}
+
+.light-theme .health-page-head h1,
+.light-theme .health-summary-card strong {
+  color: #24304a;
+}
+
+.light-theme .health-page-head p,
+.light-theme .health-summary-card span,
+.light-theme .health-summary-card em,
+.light-theme .health-table small {
+  color: #66758c;
+}
+
+.light-theme .health-summary-card,
+.light-theme .health-table-row {
+  border-color: rgba(125, 142, 169, 0.2);
+  background: #fff;
+  color: #26344b;
+}
+
+.light-theme .health-table-row.head {
+  background: #edf2f8;
+  color: #66758c;
+}
+
+.light-theme .health-error {
+  background: #fff0ed;
+  color: #9d3f2e;
+}
+
+@media (max-width: 760px) {
+  .health-summary-grid,
+  .health-table-row {
+    grid-template-columns: 1fr;
+  }
+
+  .health-table-row {
+    padding: 12px;
+  }
+
+  .health-page-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

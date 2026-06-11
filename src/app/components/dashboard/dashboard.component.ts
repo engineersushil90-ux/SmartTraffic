@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, QueryList, ViewChildren, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MapViewComponent } from './map-view.component/map-view.component';
 import { ATCCComponent } from '../atcc/atcc.component';
@@ -24,6 +24,48 @@ interface MpegtsFactory {
   createPlayer(mediaDataSource: { type: 'flv'; url: string; isLive: boolean }, config?: Record<string, unknown>): MpegtsPlayer;
 }
 
+interface UpstreamStatus {
+  name: string;
+  url: string;
+  healthUrl: string;
+  connected: boolean;
+  error?: string;
+}
+
+interface ServiceSummary {
+  category: string;
+  total: number;
+  status: Record<string, number>;
+}
+
+interface GatewayHealth {
+  ok: boolean;
+  inputUrl: string;
+  streamUrl: string;
+  bufferBytes: number;
+  atccService: string;
+  ptzService: string;
+  upstreams: UpstreamStatus[];
+  services: ServiceSummary[];
+}
+
+interface ServicesResponse {
+  upstreams: UpstreamStatus[];
+  services: ServiceSummary[];
+}
+
+interface SystemHealthRow {
+  name: string;
+  mode: string;
+  status: 'online' | 'warning' | 'offline';
+  url: string;
+  total: number;
+  connected: number;
+  warning: number;
+  disconnected: number;
+  message: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -34,7 +76,7 @@ interface MpegtsFactory {
     ATCCComponent,
   ],
 })
-export class DashboardComponent implements AfterViewInit, OnDestroy {
+export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChildren('flvVideo') private flvVideos?: QueryList<ElementRef<HTMLVideoElement>>;
 
   private readonly dashboardDataService = inject(DashboardDataService);
@@ -72,6 +114,32 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   activeAtccSection: AtccSection = 'visualization';
   expandedMenu: string | null = null;
   activeTopTab = 'Dashboard';
+  systemHealthUpdatedAt = '';
+  systemHealthLoading = false;
+  systemHealthError = '';
+  gatewayHealth: GatewayHealth | null = null;
+  systemHealthRows: SystemHealthRow[] = [];
+  private systemHealthTimer?: number;
+
+  get systemHealthTotals(): { total: number; online: number; warning: number; offline: number } {
+    return this.systemHealthRows.reduce(
+      (totals, row) => {
+        totals.total += 1;
+        totals[row.status] += 1;
+        return totals;
+      },
+      { total: 0, online: 0, warning: 0, offline: 0 },
+    );
+  }
+
+  ngOnInit(): void {
+    void this.refreshSystemHealth();
+    this.systemHealthTimer = window.setInterval(() => {
+      if (this.activeBody === 'system-health') {
+        void this.refreshSystemHealth();
+      }
+    }, 10000);
+  }
 
   ngAfterViewInit(): void {
     this.setupFlvPlayers();
@@ -80,12 +148,18 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroyFlvPlayers();
+    if (this.systemHealthTimer !== undefined) {
+      window.clearInterval(this.systemHealthTimer);
+    }
   }
 
   selectMenu(item: MenuItem): void {
     if (!item.children?.length) {
       if (item.route !== undefined) {
         this.activeBody = item.route;
+        if (item.route === 'system-health') {
+          void this.refreshSystemHealth();
+        }
       }
       this.activeTopTab = item.label;
       this.expandedMenu = null;
@@ -158,6 +232,125 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ command }),
     }).catch(() => undefined);
+  }
+
+  async refreshSystemHealth(): Promise<void> {
+    this.systemHealthLoading = true;
+    this.systemHealthError = '';
+
+    try {
+      const [health, services] = await Promise.all([
+        this.fetchGatewayJSON<GatewayHealth>('/healthz'),
+        this.fetchGatewayJSON<ServicesResponse>('/api/services'),
+      ]);
+      this.gatewayHealth = health;
+      this.systemHealthRows = this.buildSystemHealthRows(services, health);
+      this.systemHealthUpdatedAt = new Intl.DateTimeFormat('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }).format(new Date());
+    } catch (error) {
+      this.systemHealthError = error instanceof Error ? error.message : 'Unable to load system health';
+    } finally {
+      this.systemHealthLoading = false;
+    }
+  }
+
+  private buildSystemHealthRows(response: ServicesResponse, health: GatewayHealth): SystemHealthRow[] {
+    const upstreams = response.upstreams ?? health.upstreams ?? [];
+    const services = response.services ?? health.services ?? [];
+    const upstreamByName = new Map(upstreams.map(upstream => [this.normalizeServiceName(upstream.name), upstream]));
+    const rows: SystemHealthRow[] = [
+      {
+        name: 'Gateway',
+        mode: 'Server',
+        status: 'online',
+        url: window.location.port === '8080' ? window.location.origin : 'http://localhost:8080',
+        total: 1,
+        connected: 1,
+        warning: health.ok ? 0 : 1,
+        disconnected: 0,
+        message: health.ok ? 'Online and accepting client registrations' : 'Online, some clients need attention',
+      },
+    ];
+
+    for (const summary of services) {
+      const name = this.displayServiceName(summary.category);
+      const upstream = upstreamByName.get(this.normalizeServiceName(name));
+      const connected = Number(summary.status?.['connected'] ?? 0);
+      const warning = Number(summary.status?.['warning'] ?? 0);
+      const disconnected = Number(summary.status?.['disconnected'] ?? 0);
+      const isSplitClient = !!upstream;
+      const isOnline = isSplitClient ? upstream.connected : true;
+      const status = isOnline ? 'online' : 'offline';
+      const deviceNote = this.formatDeviceNote(connected, warning, disconnected);
+
+      rows.push({
+        name,
+        mode: isSplitClient ? 'Client' : 'Internal',
+        status,
+        url: upstream?.url ?? 'gateway internal',
+        total: Number(summary.total ?? 0),
+        connected,
+        warning,
+        disconnected,
+        message: upstream?.error
+          ? `Not connected with gateway: ${upstream.error}`
+          : (isSplitClient ? `Connected with gateway. ${deviceNote}` : `Running inside gateway. ${deviceNote}`),
+      });
+    }
+
+    return rows;
+  }
+
+  private formatDeviceNote(connected: number, warning: number, disconnected: number): string {
+    const notes = [`${connected} online`];
+    if (warning > 0) {
+      notes.push(`${warning} warning`);
+    }
+    if (disconnected > 0) {
+      notes.push(`${disconnected} offline`);
+    }
+    return notes.join(', ');
+  }
+
+  private async fetchGatewayJSON<T>(path: string): Promise<T> {
+    const localURL = path;
+    const gatewayURL = `http://localhost:8080${path}`;
+    const urls = window.location.port === '8080' ? [localURL] : [localURL, gatewayURL];
+    let lastError: unknown;
+
+    for (const url of urls) {
+      try {
+        const response = await fetch(url, { headers: { Accept: 'application/json' } });
+        if (!response.ok) {
+          throw new Error(`${url} returned ${response.status}`);
+        }
+        return await response.json() as T;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    throw lastError instanceof Error ? lastError : new Error('Gateway health API unavailable');
+  }
+
+  private displayServiceName(category: string): string {
+    const labels: Record<string, string> = {
+      atcc: 'ATCC',
+      vids: 'VIDS',
+      'ptz-cameras': 'PTZ Camera',
+      'cctv-cameras': 'CCTV Camera',
+      met: 'MET',
+      vms: 'VMS',
+      vsds: 'VSDS',
+    };
+    return labels[category] ?? category.toUpperCase();
+  }
+
+  private normalizeServiceName(name: string): string {
+    return name.toLowerCase().replace(/[^a-z0-9]/g, '');
   }
 
   applyLiveBuffer(event: Event, bufferSeconds = 2): void {
