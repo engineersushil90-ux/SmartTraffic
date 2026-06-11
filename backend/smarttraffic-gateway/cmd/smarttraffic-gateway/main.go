@@ -107,7 +107,7 @@ func (m gatewayWindowsService) Execute(_ []string, requests <-chan svc.ChangeReq
 func runGateway(ctx context.Context) error {
 	cfg := config.Load()
 	hub := stream.NewHub(cfg.BufferBytes)
-	runner := stream.NewFFmpegRunner(cfg.FFmpegPath, cfg.InputURL, cfg.RTSPTransport, hub)
+	runner := stream.NewFFmpegRunner(cfg.FFmpegPath, cfg.InputURL, cfg.RTSPTransport, cfg.VideoCodec, hub)
 
 	registry := services.NewRegistry()
 	checkGatewayUpstreams(ctx, cfg)

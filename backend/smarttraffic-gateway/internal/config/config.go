@@ -11,6 +11,7 @@ type Config struct {
 	InputURL       string
 	FFmpegPath     string
 	RTSPTransport  string
+	VideoCodec     string
 	BufferBytes    int
 	ATCCServiceURL string
 	PTZServiceURL  string
@@ -22,6 +23,7 @@ func Load() Config {
 		InputURL:       env("STREAM_INPUT_RTSP", "rtsp://localhost:8554/live"),
 		FFmpegPath:     env("FFMPEG_PATH", "ffmpeg"),
 		RTSPTransport:  env("STREAM_RTSP_TRANSPORT", "tcp"),
+		VideoCodec:     env("STREAM_VIDEO_CODEC", "libx264"),
 		BufferBytes:    envInt("STREAM_BUFFER_BYTES", 4*1024*1024),
 		ATCCServiceURL: env("ATCC_SERVICE_URL", "http://localhost:8091"),
 		PTZServiceURL:  env("PTZ_SERVICE_URL", "http://localhost:8092"),

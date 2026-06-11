@@ -80,6 +80,7 @@
               class="refresh-health"
               type="button"
               [class.loading]="refreshButtonBusy"
+              [disabled]="false"
               [attr.aria-busy]="refreshButtonBusy"
               (click)="refreshSystemHealth(true)"
             >

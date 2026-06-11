@@ -28,6 +28,7 @@ type statusResponse struct {
 	OK          bool               `json:"ok"`
 	InputURL    string             `json:"inputUrl"`
 	StreamURL   string             `json:"streamUrl"`
+	VideoCodec  string             `json:"videoCodec"`
 	BufferBytes int                `json:"bufferBytes"`
 	ATCCService string             `json:"atccService"`
 	PTZService  string             `json:"ptzService"`
@@ -315,6 +316,7 @@ func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 		OK:          ok,
 		InputURL:    s.cfg.InputURL,
 		StreamURL:   "http://localhost" + s.cfg.Addr + "/live",
+		VideoCodec:  s.cfg.VideoCodec,
 		BufferBytes: s.cfg.BufferBytes,
 		ATCCService: s.cfg.ATCCServiceURL,
 		PTZService:  s.cfg.PTZServiceURL,

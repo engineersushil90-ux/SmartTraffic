@@ -252,6 +252,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
         minute: '2-digit',
         second: '2-digit',
       }).format(new Date());
+      this.setRefreshButtonBusy(false);
     } catch (error) {
       this.systemHealthError = error instanceof Error ? error.message : 'Unable to load system health';
       this.gatewayHealth = null;
@@ -261,6 +262,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
         minute: '2-digit',
         second: '2-digit',
       }).format(new Date());
+      this.setRefreshButtonBusy(false);
     } finally {
       this.systemHealthLoading = false;
       this.setRefreshButtonBusy(false);

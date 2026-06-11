@@ -16,14 +16,16 @@ type FFmpegRunner struct {
 	ffmpegPath    string
 	inputURL      string
 	rtspTransport string
+	videoCodec    string
 	output        io.Writer
 }
 
-func NewFFmpegRunner(ffmpegPath string, inputURL string, rtspTransport string, output io.Writer) *FFmpegRunner {
+func NewFFmpegRunner(ffmpegPath string, inputURL string, rtspTransport string, videoCodec string, output io.Writer) *FFmpegRunner {
 	return &FFmpegRunner{
 		ffmpegPath:    ffmpegPath,
 		inputURL:      inputURL,
 		rtspTransport: rtspTransport,
+		videoCodec:    strings.TrimSpace(videoCodec),
 		output:        output,
 	}
 }
@@ -45,13 +47,18 @@ func (r *FFmpegRunner) RunLoop(ctx context.Context) {
 
 func (r *FFmpegRunner) runOnce(ctx context.Context) error {
 	args := []string{
+		"-hide_banner",
+		"-loglevel", "warning",
 		"-rtsp_transport", r.rtspTransport,
 		"-i", r.inputURL,
 		"-an",
-		"-c:v", "copy",
+	}
+
+	args = append(args, r.videoArgs()...)
+	args = append(args,
 		"-f", "flv",
 		"pipe:1",
-	}
+	)
 
 	cmd := exec.CommandContext(ctx, r.ffmpegPath, args...)
 	stdout, err := cmd.StdoutPipe()
@@ -78,4 +85,24 @@ func (r *FFmpegRunner) runOnce(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (r *FFmpegRunner) videoArgs() []string {
+	if strings.EqualFold(r.videoCodec, "copy") {
+		return []string{"-c:v", "copy"}
+	}
+
+	codec := r.videoCodec
+	if codec == "" {
+		codec = "libx264"
+	}
+
+	return []string{
+		"-c:v", codec,
+		"-preset", "veryfast",
+		"-tune", "zerolatency",
+		"-pix_fmt", "yuv420p",
+		"-g", "30",
+		"-bf", "0",
+	}
 }
