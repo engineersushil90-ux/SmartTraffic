@@ -66,6 +66,20 @@ func (d *ClientDirectory) Register(spec upstreams.Spec) {
 	d.clients[spec.Name] = spec
 }
 
+func validateHTTPURL(rawURL string) error {
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return err
+	}
+	if parsed.Scheme != "http" && parsed.Scheme != "https" {
+		return url.InvalidHostError("scheme must be http or https")
+	}
+	if parsed.Host == "" {
+		return url.InvalidHostError("host is required")
+	}
+	return nil
+}
+
 func (d *ClientDirectory) Get(name string) (upstreams.Spec, bool) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
@@ -224,6 +238,10 @@ func (s *Server) handleClients(w http.ResponseWriter, r *http.Request) {
 		}
 		if strings.TrimSpace(req.Name) == "" || strings.TrimSpace(req.URL) == "" {
 			http.Error(w, "name and url are required", http.StatusBadRequest)
+			return
+		}
+		if err := validateHTTPURL(strings.TrimSpace(req.URL)); err != nil {
+			http.Error(w, "client url must be a valid http url", http.StatusBadRequest)
 			return
 		}
 		s.clients.Register(upstreams.Spec{Name: req.Name, URL: req.URL, HealthURL: req.HealthURL})

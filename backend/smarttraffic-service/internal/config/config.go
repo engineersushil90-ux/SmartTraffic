@@ -18,21 +18,29 @@ type Config struct {
 func Load() Config {
 	backendRoot := findBackendRoot()
 	return Config{
-		ATCCExecutable:    env("ATCC_SERVICE_EXE", filepath.Join(backendRoot, "atcc-service", "atcc-service.exe")),
-		PTZExecutable:     env("PTZ_SERVICE_EXE", filepath.Join(backendRoot, "ptz-service", "ptz-service.exe")),
-		GatewayExecutable: env("SMARTTRAFFIC_GATEWAY_EXE", filepath.Join(backendRoot, "smarttraffic-gateway", "smarttraffic-gateway.exe")),
-		ATCCURL:           env("ATCC_SERVICE_URL", "http://localhost:8091"),
-		PTZURL:            env("PTZ_SERVICE_URL", "http://localhost:8092"),
-		GatewayURL:        env("SMARTTRAFFIC_GATEWAY_URL", "http://localhost:8080"),
+		ATCCExecutable:    envPath("ATCC_SERVICE_EXE", filepath.Join(backendRoot, "atcc-service", "atcc-service.exe")),
+		PTZExecutable:     envPath("PTZ_SERVICE_EXE", filepath.Join(backendRoot, "ptz-service", "ptz-service.exe")),
+		GatewayExecutable: envPath("SMARTTRAFFIC_GATEWAY_EXE", filepath.Join(backendRoot, "smarttraffic-gateway", "smarttraffic-gateway.exe")),
+		ATCCURL:           envURL("ATCC_SERVICE_URL", "http://localhost:8091"),
+		PTZURL:            envURL("PTZ_SERVICE_URL", "http://localhost:8092"),
+		GatewayURL:        envURL("SMARTTRAFFIC_GATEWAY_URL", "http://localhost:8080"),
 	}
 }
 
-func env(name string, fallback string) string {
+func envPath(name string, fallback string) string {
 	value := strings.TrimSpace(os.Getenv(name))
 	if value == "" {
 		return filepath.Clean(fallback)
 	}
-	return value
+	return filepath.Clean(value)
+}
+
+func envURL(name string, fallback string) string {
+	value := strings.TrimSpace(os.Getenv(name))
+	if value == "" {
+		return fallback
+	}
+	return strings.TrimRight(value, "/")
 }
 
 func findBackendRoot() string {

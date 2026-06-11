@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 )
@@ -32,9 +33,14 @@ type Status struct {
 type Manager struct {
 	specs  []Spec
 	mu     sync.Mutex
-	procs  map[string]*exec.Cmd
+	procs  map[string]*managedProcess
 	status map[string]Status
 	client *http.Client
+}
+
+type managedProcess struct {
+	cmd  *exec.Cmd
+	done chan error
 }
 
 func New(specs []Spec) *Manager {
@@ -44,7 +50,7 @@ func New(specs []Spec) *Manager {
 	}
 	return &Manager{
 		specs:  specs,
-		procs:  make(map[string]*exec.Cmd),
+		procs:  make(map[string]*managedProcess),
 		status: status,
 		client: &http.Client{Timeout: 2 * time.Second},
 	}
@@ -60,21 +66,61 @@ func (m *Manager) StartAll(ctx context.Context) {
 }
 
 func (m *Manager) StopAll() {
-	m.mu.Lock()
-	procs := make(map[string]*exec.Cmd, len(m.procs))
-	for name, cmd := range m.procs {
-		procs[name] = cmd
-	}
-	m.mu.Unlock()
-
-	for name, cmd := range procs {
-		if cmd.Process == nil {
+	for index := len(m.specs) - 1; index >= 0; index-- {
+		name := m.specs[index].Name
+		m.mu.Lock()
+		proc := m.procs[name]
+		m.mu.Unlock()
+		if proc == nil || proc.cmd.Process == nil {
 			continue
 		}
-		if err := cmd.Process.Kill(); err != nil {
-			log.Printf("failed to stop %s: %v", name, err)
+
+		select {
+		case <-proc.done:
+			m.markStopped(name, "")
+			continue
+		default:
+		}
+
+		if err := proc.cmd.Process.Kill(); err != nil {
+			if !isProcessAlreadyFinished(err) {
+				log.Printf("failed to stop %s: %v", name, err)
+			}
+			m.markStopped(name, err.Error())
+			continue
+		}
+
+		select {
+		case err := <-proc.done:
+			if err != nil && !isProcessAlreadyFinished(err) {
+				log.Printf("service %s stopped: %v", name, err)
+			}
+		case <-time.After(5 * time.Second):
+			log.Printf("timed out waiting for %s to stop", name)
 		}
 	}
+}
+
+func (m *Manager) markStopped(name string, errorMessage string) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	status := m.status[name]
+	status.Running = false
+	status.PID = 0
+	status.Error = errorMessage
+	m.status[name] = status
+	delete(m.procs, name)
+}
+
+func isProcessAlreadyFinished(err error) bool {
+	if err == nil {
+		return false
+	}
+	message := strings.ToLower(err.Error())
+	return strings.Contains(message, "invalid argument") ||
+		strings.Contains(message, "process already finished") ||
+		strings.Contains(message, "no process")
 }
 
 func (m *Manager) Statuses() []Status {
@@ -106,7 +152,13 @@ func (m *Manager) startLocked(ctx context.Context, spec Spec) {
 		return
 	}
 
-	cmd := exec.CommandContext(ctx, spec.Executable)
+	if ctx.Err() != nil {
+		status.Error = ctx.Err().Error()
+		m.status[spec.Name] = status
+		return
+	}
+
+	cmd := exec.Command(spec.Executable)
 	cmd.Dir = filepath.Dir(spec.Executable)
 	cmd.Env = append(os.Environ(), spec.Env...)
 	if err := cmd.Start(); err != nil {
@@ -118,22 +170,28 @@ func (m *Manager) startLocked(ctx context.Context, spec Spec) {
 	status.Started = true
 	status.PID = cmd.Process.Pid
 	status.Error = ""
-	m.procs[spec.Name] = cmd
+	proc := &managedProcess{cmd: cmd, done: make(chan error, 1)}
+	m.procs[spec.Name] = proc
 	m.status[spec.Name] = status
 
-	go m.wait(spec.Name, cmd)
+	go m.wait(spec.Name, proc)
 	log.Printf("started service name=%s pid=%d", spec.Name, cmd.Process.Pid)
 }
 
-func (m *Manager) wait(name string, cmd *exec.Cmd) {
-	err := cmd.Wait()
+func (m *Manager) wait(name string, proc *managedProcess) {
+	err := proc.cmd.Wait()
+	proc.done <- err
 	m.mu.Lock()
 	defer m.mu.Unlock()
+
+	if current := m.procs[name]; current != proc {
+		return
+	}
 
 	status := m.status[name]
 	status.Running = false
 	status.PID = 0
-	if err != nil {
+	if err != nil && !isProcessAlreadyFinished(err) {
 		status.Error = err.Error()
 	}
 	delete(m.procs, name)
