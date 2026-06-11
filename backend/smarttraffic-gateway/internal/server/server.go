@@ -8,6 +8,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"smarttraffic/gateway/internal/config"
@@ -17,12 +18,10 @@ import (
 )
 
 type Server struct {
-	cfg             config.Config
-	hub             *stream.Hub
-	services        *services.Registry
-	upstreamChecker *upstreams.Checker
-	atccProxy       *httputil.ReverseProxy
-	ptzProxy        *httputil.ReverseProxy
+	cfg      config.Config
+	hub      *stream.Hub
+	services *services.Registry
+	clients  *ClientDirectory
 }
 
 type statusResponse struct {
@@ -36,22 +35,79 @@ type statusResponse struct {
 	Services    []map[string]any   `json:"services"`
 }
 
-type ptzRequest struct {
-	Command string `json:"command"`
+type clientRegistration struct {
+	Name      string `json:"name"`
+	URL       string `json:"url"`
+	HealthURL string `json:"healthUrl"`
+}
+
+type ClientDirectory struct {
+	mu      sync.RWMutex
+	clients map[string]upstreams.Spec
+}
+
+func NewClientDirectory(defaults []upstreams.Spec) *ClientDirectory {
+	directory := &ClientDirectory{clients: make(map[string]upstreams.Spec, len(defaults))}
+	for _, spec := range defaults {
+		directory.Register(spec)
+	}
+	return directory
+}
+
+func (d *ClientDirectory) Register(spec upstreams.Spec) {
+	spec.Name = normalizeClientName(spec.Name)
+	spec.URL = strings.TrimRight(spec.URL, "/")
+	if strings.TrimSpace(spec.HealthURL) == "" && spec.URL != "" {
+		spec.HealthURL = strings.TrimRight(spec.URL, "/") + "/healthz"
+	}
+
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	d.clients[spec.Name] = spec
+}
+
+func (d *ClientDirectory) Get(name string) (upstreams.Spec, bool) {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	spec, ok := d.clients[normalizeClientName(name)]
+	return spec, ok
+}
+
+func (d *ClientDirectory) Specs() []upstreams.Spec {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	specs := make([]upstreams.Spec, 0, len(d.clients))
+	for _, name := range []string{"ATCC", "PTZ Camera"} {
+		if spec, ok := d.clients[name]; ok {
+			specs = append(specs, spec)
+		}
+	}
+	return specs
+}
+
+func normalizeClientName(name string) string {
+	switch strings.ToLower(strings.TrimSpace(name)) {
+	case "atcc":
+		return "ATCC"
+	case "ptz", "ptz-camera", "ptz-cameras":
+		return "PTZ Camera"
+	default:
+		return strings.TrimSpace(name)
+	}
 }
 
 func New(cfg config.Config, hub *stream.Hub, registry *services.Registry) *http.Server {
+	clients := NewClientDirectory(upstreams.ServiceSpecs(cfg.ATCCServiceURL, cfg.PTZServiceURL))
 	app := &Server{
-		cfg:             cfg,
-		hub:             hub,
-		services:        registry,
-		upstreamChecker: upstreams.NewChecker(upstreams.ServiceSpecs(cfg.ATCCServiceURL, cfg.PTZServiceURL)),
+		cfg:      cfg,
+		hub:      hub,
+		services: registry,
+		clients:  clients,
 	}
-	app.atccProxy = newReverseProxy(cfg.ATCCServiceURL, "ATCC service")
-	app.ptzProxy = newReverseProxy(cfg.PTZServiceURL, "PTZ service")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", withCORS(app.handleHealth))
 	mux.HandleFunc("/live", withCORS(app.hub.HandleFLV))
+	mux.HandleFunc("/api/clients", withCORS(app.handleClients))
 	mux.HandleFunc("/api/services", withCORS(app.handleServiceSummaries))
 	mux.HandleFunc("/api/atcc", withCORS(app.handleATCCProxy))
 	mux.HandleFunc("/api/atcc/", withCORS(app.handleATCCProxy))
@@ -77,29 +133,30 @@ func New(cfg config.Config, hub *stream.Hub, registry *services.Registry) *http.
 	}
 }
 
-func newReverseProxy(targetURL string, label string) *httputil.ReverseProxy {
+func proxyTo(w http.ResponseWriter, r *http.Request, targetURL string, label string) {
 	target, err := url.Parse(targetURL)
 	if err != nil {
-		log.Printf("%s proxy disabled: invalid url %q", label, targetURL)
-		return nil
+		http.Error(w, label+" has invalid client url", http.StatusBadGateway)
+		return
 	}
 	proxy := httputil.NewSingleHostReverseProxy(target)
 	proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
 		log.Printf("%s proxy error path=%s err=%v", label, r.URL.Path, err)
 		http.Error(w, label+" unavailable", http.StatusBadGateway)
 	}
-	return proxy
+	proxy.ServeHTTP(w, r)
 }
 
 func (s *Server) handleATCCProxy(w http.ResponseWriter, r *http.Request) {
 	if !allowProxyMethod(w, r, http.MethodGet) {
 		return
 	}
-	if s.atccProxy == nil {
-		http.Error(w, "ATCC service proxy is not configured", http.StatusServiceUnavailable)
+	client, ok := s.clients.Get("atcc")
+	if !ok || client.URL == "" {
+		http.Error(w, "ATCC client is not registered", http.StatusServiceUnavailable)
 		return
 	}
-	s.atccProxy.ServeHTTP(w, r)
+	proxyTo(w, r, client.URL, "ATCC client")
 }
 
 func (s *Server) handlePTZProxy(w http.ResponseWriter, r *http.Request) {
@@ -111,11 +168,12 @@ func (s *Server) handlePTZProxy(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	if s.ptzProxy == nil {
-		http.Error(w, "PTZ service proxy is not configured", http.StatusServiceUnavailable)
+	client, ok := s.clients.Get("ptz")
+	if !ok || client.URL == "" {
+		http.Error(w, "PTZ client is not registered", http.StatusServiceUnavailable)
 		return
 	}
-	s.ptzProxy.ServeHTTP(w, r)
+	proxyTo(w, r, client.URL, "PTZ client")
 }
 
 func allowProxyMethod(w http.ResponseWriter, r *http.Request, method string) bool {
@@ -142,11 +200,37 @@ func (s *Server) handleServiceSummaries(w http.ResponseWriter, r *http.Request) 
 
 	checkCtx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 	defer cancel()
+	checker := upstreams.NewChecker(s.clients.Specs())
 
 	writeJSON(w, map[string]any{
-		"upstreams": s.upstreamChecker.CheckAll(checkCtx),
+		"upstreams": checker.CheckAll(checkCtx),
 		"services":  s.services.Summaries(),
 	})
+}
+
+func (s *Server) handleClients(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	switch r.Method {
+	case http.MethodGet:
+		writeJSON(w, map[string]any{"clients": s.clients.Specs()})
+	case http.MethodPost:
+		var req clientRegistration
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "invalid json", http.StatusBadRequest)
+			return
+		}
+		if strings.TrimSpace(req.Name) == "" || strings.TrimSpace(req.URL) == "" {
+			http.Error(w, "name and url are required", http.StatusBadRequest)
+			return
+		}
+		s.clients.Register(upstreams.Spec{Name: req.Name, URL: req.URL, HealthURL: req.HealthURL})
+		writeJSON(w, map[string]any{"ok": true, "client": normalizeClientName(req.Name)})
+	default:
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	}
 }
 
 func (s *Server) handleDeviceCollection(service *services.DeviceService) http.HandlerFunc {
@@ -198,7 +282,8 @@ func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 
 	checkCtx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 	defer cancel()
-	upstreamStatuses := s.upstreamChecker.CheckAll(checkCtx)
+	checker := upstreams.NewChecker(s.clients.Specs())
+	upstreamStatuses := checker.CheckAll(checkCtx)
 
 	ok := true
 	for _, status := range upstreamStatuses {

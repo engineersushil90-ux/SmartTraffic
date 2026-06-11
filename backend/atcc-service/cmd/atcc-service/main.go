@@ -1,13 +1,16 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"golang.org/x/sys/windows/svc"
@@ -106,6 +109,7 @@ func runHTTP(ctx context.Context) error {
 		log.Printf("ATCC service listening on %s", cfg.Addr)
 		errs <- srv.ListenAndServe()
 	}()
+	go registerWithGateway(ctx, cfg)
 
 	select {
 	case <-ctx.Done():
@@ -115,6 +119,66 @@ func runHTTP(ctx context.Context) error {
 	case err := <-errs:
 		return err
 	}
+}
+
+func registerWithGateway(ctx context.Context, cfg config.Config) {
+	payload := map[string]string{
+		"name":      "atcc",
+		"url":       strings.TrimRight(cfg.PublicURL, "/"),
+		"healthUrl": strings.TrimRight(cfg.PublicURL, "/") + "/healthz",
+	}
+	endpoint := strings.TrimRight(cfg.GatewayURL, "/") + "/api/clients"
+	registered := false
+
+	for {
+		if registerClient(ctx, endpoint, payload) == nil {
+			if !registered {
+				log.Printf("ATCC registered with gateway at %s", cfg.GatewayURL)
+			}
+			registered = true
+			if !wait(ctx, 10*time.Second) {
+				return
+			}
+			continue
+		}
+
+		if !wait(ctx, 2*time.Second) {
+			return
+		}
+	}
+}
+
+func wait(ctx context.Context, interval time.Duration) bool {
+	timer := time.NewTimer(interval)
+	defer timer.Stop()
+	select {
+	case <-ctx.Done():
+		return false
+	case <-timer.C:
+		return true
+	}
+}
+
+func registerClient(ctx context.Context, endpoint string, payload map[string]string) error {
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
+		return fmt.Errorf("gateway returned %s", resp.Status)
+	}
+	return nil
 }
 
 func handleServiceAction(action string) error {

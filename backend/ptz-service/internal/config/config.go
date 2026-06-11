@@ -9,12 +9,16 @@ import (
 
 type Config struct {
 	Addr              string
+	PublicURL         string
+	GatewayURL        string
 	ReadHeaderTimeout time.Duration
 }
 
 func Load() Config {
 	return Config{
 		Addr:              env("PTZ_SERVICE_ADDR", ":8092"),
+		PublicURL:         env("PTZ_SERVICE_URL", "http://localhost:8092"),
+		GatewayURL:        env("SMARTTRAFFIC_GATEWAY_URL", "http://localhost:8080"),
 		ReadHeaderTimeout: time.Duration(envInt("PTZ_READ_HEADER_TIMEOUT_SECONDS", 5)) * time.Second,
 	}
 }

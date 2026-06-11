@@ -9,12 +9,16 @@ import (
 
 type Config struct {
 	Addr              string
+	PublicURL         string
+	GatewayURL        string
 	ReadHeaderTimeout time.Duration
 }
 
 func Load() Config {
 	return Config{
 		Addr:              env("ATCC_SERVICE_ADDR", ":8091"),
+		PublicURL:         env("ATCC_SERVICE_URL", "http://localhost:8091"),
+		GatewayURL:        env("SMARTTRAFFIC_GATEWAY_URL", "http://localhost:8080"),
 		ReadHeaderTimeout: time.Duration(envInt("ATCC_READ_HEADER_TIMEOUT_SECONDS", 5)) * time.Second,
 	}
 }

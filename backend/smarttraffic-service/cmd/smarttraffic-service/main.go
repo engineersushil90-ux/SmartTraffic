@@ -23,7 +23,7 @@ import (
 const (
 	serviceName        = "Smarttraffic-Service"
 	serviceDisplayName = "Smarttraffic Service"
-	serviceDescription = "Smarttraffic parent service that starts gateway, ATCC, PTZ, and other backend services."
+	serviceDescription = "Smarttraffic parent service that starts the gateway server and backend clients."
 )
 
 type windowsService struct{}
@@ -96,9 +96,9 @@ func (s windowsService) Execute(_ []string, requests <-chan svc.ChangeRequest, c
 func run(ctx context.Context) error {
 	cfg := config.Load()
 	services := manager.New([]manager.Spec{
-		{Name: "atcc", URL: cfg.ATCCURL, HealthURL: cfg.ATCCURL + "/healthz", Executable: cfg.ATCCExecutable},
-		{Name: "ptz", URL: cfg.PTZURL, HealthURL: cfg.PTZURL + "/healthz", Executable: cfg.PTZExecutable},
 		{Name: "gateway", URL: cfg.GatewayURL, HealthURL: cfg.GatewayURL + "/healthz", Executable: cfg.GatewayExecutable, Env: []string{"ATCC_SERVICE_URL=" + cfg.ATCCURL, "PTZ_SERVICE_URL=" + cfg.PTZURL}},
+		{Name: "atcc", URL: cfg.ATCCURL, HealthURL: cfg.ATCCURL + "/healthz", Executable: cfg.ATCCExecutable, Env: []string{"SMARTTRAFFIC_GATEWAY_URL=" + cfg.GatewayURL, "ATCC_SERVICE_URL=" + cfg.ATCCURL}},
+		{Name: "ptz", URL: cfg.PTZURL, HealthURL: cfg.PTZURL + "/healthz", Executable: cfg.PTZExecutable, Env: []string{"SMARTTRAFFIC_GATEWAY_URL=" + cfg.GatewayURL, "PTZ_SERVICE_URL=" + cfg.PTZURL}},
 	})
 	services.StartAll(ctx)
 	defer services.StopAll()
