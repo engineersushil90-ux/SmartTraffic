@@ -76,7 +76,13 @@
             >
               Auto Refresh
             </button>
-            <button class="refresh-health" type="button" (click)="refreshSystemHealth()" [disabled]="systemHealthLoading">
+            <button
+              class="refresh-health"
+              type="button"
+              [class.loading]="refreshButtonBusy"
+              [attr.aria-busy]="refreshButtonBusy"
+              (click)="refreshSystemHealth(true)"
+            >
               Refresh
             </button>
           </div>
@@ -110,7 +116,7 @@
         <article class="panel health-table-card">
           <div class="panel-head">
             <h2>All Service Status</h2>
-            <a>{{ gatewayHealth?.ok ? 'Gateway Online' : 'Gateway Warning' }}</a>
+            <a>{{ gatewayHealth === null ? 'Gateway Offline' : (gatewayHealth.ok ? 'Gateway Online' : 'Gateway Warning') }}</a>
           </div>
 
           <div class="health-table" role="table" aria-label="All service status">

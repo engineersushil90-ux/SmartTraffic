@@ -111,11 +111,13 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   activeTopTab = 'Dashboard';
   systemHealthUpdatedAt = '';
   systemHealthLoading = false;
+  refreshButtonBusy = false;
   systemHealthError = '';
   gatewayHealth: GatewayHealth | null = null;
   systemHealthRows: SystemHealthRow[] = [];
   systemHealthAutoRefresh = true;
   private systemHealthTimer?: number;
+  private refreshButtonTimer?: number;
 
   get systemHealthTotals(): { total: number; online: number; warning: number; offline: number } {
     return this.systemHealthRows.reduce(
@@ -143,6 +145,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
     if (this.systemHealthTimer !== undefined) {
       window.clearInterval(this.systemHealthTimer);
     }
+    if (this.refreshButtonTimer !== undefined) {
+      window.clearTimeout(this.refreshButtonTimer);
+    }
   }
 
   selectMenu(item: MenuItem): void {
@@ -150,7 +155,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
       if (item.route !== undefined) {
         this.activeBody = item.route;
         if (item.route === 'system-health') {
-          void this.refreshSystemHealth();
+          void this.refreshSystemHealth(true);
           this.startSystemHealthAutoRefresh();
         } else {
           this.stopSystemHealthAutoRefresh();
@@ -229,12 +234,13 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
     }).catch(() => undefined);
   }
 
-  async refreshSystemHealth(): Promise<void> {
+  async refreshSystemHealth(manual = false): Promise<void> {
     if (this.systemHealthLoading) {
       return;
     }
 
     this.systemHealthLoading = true;
+    this.setRefreshButtonBusy(manual);
     this.systemHealthError = '';
 
     try {
@@ -248,8 +254,31 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
       }).format(new Date());
     } catch (error) {
       this.systemHealthError = error instanceof Error ? error.message : 'Unable to load system health';
+      this.gatewayHealth = null;
+      this.systemHealthRows = this.buildUnavailableSystemHealthRows(this.systemHealthError);
+      this.systemHealthUpdatedAt = new Intl.DateTimeFormat('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }).format(new Date());
     } finally {
       this.systemHealthLoading = false;
+      this.setRefreshButtonBusy(false);
+    }
+  }
+
+  private setRefreshButtonBusy(isBusy: boolean): void {
+    if (this.refreshButtonTimer !== undefined) {
+      window.clearTimeout(this.refreshButtonTimer);
+      this.refreshButtonTimer = undefined;
+    }
+
+    this.refreshButtonBusy = isBusy;
+    if (isBusy) {
+      this.refreshButtonTimer = window.setTimeout(() => {
+        this.refreshButtonBusy = false;
+        this.refreshButtonTimer = undefined;
+      }, 1500);
     }
   }
 
@@ -258,7 +287,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
 
     if (this.systemHealthAutoRefresh) {
       this.startSystemHealthAutoRefresh();
-      void this.refreshSystemHealth();
+      void this.refreshSystemHealth(true);
       return;
     }
 
@@ -331,6 +360,26 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     return rows;
+  }
+
+  private buildUnavailableSystemHealthRows(errorMessage: string): SystemHealthRow[] {
+    return [
+      { name: 'Gateway', mode: 'Server', url: 'http://localhost:8080', total: 1 },
+      { name: 'ATCC', mode: 'Client', url: 'http://localhost:8091', total: 0 },
+      { name: 'VIDS', mode: 'Internal', url: 'gateway internal', total: 0 },
+      { name: 'PTZ Camera', mode: 'Client', url: 'http://localhost:8092', total: 0 },
+      { name: 'CCTV Camera', mode: 'Internal', url: 'gateway internal', total: 0 },
+      { name: 'MET', mode: 'Internal', url: 'gateway internal', total: 0 },
+      { name: 'VMS', mode: 'Internal', url: 'gateway internal', total: 0 },
+      { name: 'VSDS', mode: 'Internal', url: 'gateway internal', total: 0 },
+    ].map(service => ({
+      ...service,
+      status: 'offline' as const,
+      connected: 0,
+      warning: 0,
+      disconnected: service.total,
+      message: service.name === 'Gateway' ? `No response from gateway: ${errorMessage}` : 'Status unavailable because gateway is offline',
+    }));
   }
 
   private formatDeviceNote(connected: number, warning: number, disconnected: number): string {
