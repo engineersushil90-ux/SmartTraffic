@@ -1,1 +1,221 @@
-<p>vids works!</p>
+<main class="vids-shell" [class.embedded]="embedded">
+  <aside class="vids-side" *ngIf="!embedded">
+    <a class="back-link" href="/">-</a>
+    <div class="vids-menu-head">
+      <span class="vids-icon">V</span>
+      <strong>VIDS</strong>
+      <b class="expand-icon">v</b>
+    </div>
+
+    <div class="vids-nav">
+      <button class="sub-item" type="button" *ngFor="let item of subMenu" [class.active]="activeSection === item.id" (click)="setSection(item.id)">
+        <i>{{ item.icon }}</i>
+        <span>{{ item.label }}</span>
+      </button>
+
+      <div class="inner-menu" *ngIf="sectionSubMenu[activeSection]?.length">
+        <button class="inner-item" type="button" *ngFor="let child of sectionSubMenu[activeSection]" [class.active]="activeSubSection === child.id" (click)="setSubSection(child.id)">
+          <span>{{ child.label }}</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <section class="vids-main">
+    <header class="vids-top">
+      <div>
+        <h1>VIDS Incident Detection</h1>
+        <p>Video incident detection and AI event monitoring</p>
+      </div>
+      <div class="vids-actions">
+        <span>Last updated: {{ updatedAt }}</span>
+        <button type="button">Refresh</button>
+        <label><input type="checkbox" checked /> Auto-refresh</label>
+      </div>
+    </header>
+
+    <section *ngIf="activeSection === 'visualization'" class="view-space dashboard-view">
+      <section class="summary-grid">
+        <article class="summary-card" *ngFor="let card of summaryCards" [ngClass]="card.tone">
+          <i>{{ card.icon }}</i>
+          <span>{{ card.label }}</span>
+          <strong>{{ card.value }}</strong>
+          <em>{{ card.meta }}</em>
+        </article>
+      </section>
+
+      <section class="monitoring-grid">
+        <section class="live-panel">
+          <div class="panel-head">
+            <h2>Live Monitoring <span class="live-dot">Live</span></h2>
+            <div class="tool-actions">
+              <button type="button" title="Grid view">#</button>
+              <button type="button" title="List view">=</button>
+              <button type="button">View All Cameras</button>
+            </div>
+          </div>
+
+          <div class="camera-grid">
+            <article class="camera-card plain-feed" *ngFor="let camera of selectedCameraFeeds">
+              <div class="camera-placeholder" aria-hidden="true"></div>
+              <div class="camera-shade"></div>
+
+              <header class="camera-title">
+                <strong>{{ camera.id.replace('CAM', 'Camera') }} | {{ camera.name }}</strong>
+                <span>{{ camera.status }}</span>
+              </header>
+
+              <div class="detection-box" *ngFor="let detection of camera.detections" [ngClass]="detection.tone" [style.left.%]="detection.left" [style.top.%]="detection.top" [style.width.%]="detection.width" [style.height.%]="detection.height">
+                <b>{{ detection.label }}</b>
+              </div>
+
+              <footer class="camera-controls" aria-label="Camera tools">
+                <button type="button" title="Snapshot">[]</button>
+                <button type="button" title="Audio">A</button>
+                <button type="button" title="Talk">T</button>
+                <button type="button" title="Pan">P</button>
+                <button type="button" title="Focus">F</button>
+                <button type="button" title="Record">R</button>
+                <button type="button" title="Fullscreen">FS</button>
+              </footer>
+              <button class="expand-camera" type="button" title="Expand camera">+</button>
+            </article>
+          </div>
+        </section>
+
+      </section>
+
+      <article class="table-card compact dashboard-table">
+        <div class="table-toolbar">
+          <h2>Incident Table</h2>
+          <div>
+            <button type="button">Export</button>
+            <button type="button">Filters</button>
+          </div>
+        </div>
+        <div class="incident-table">
+          <div class="incident-row head">
+            <span>#</span><span>Evidence</span><span>Time</span><span>Incident Type</span><span>Camera</span><span>Location</span><span>Severity</span><span>Status</span><span>AI Confidence</span>
+          </div>
+          <div class="incident-row" *ngFor="let row of incidents">
+            <span>{{ row.id }}</span>
+            <span class="thumb"><span class="evidence-dot" [ngClass]="row.tone"></span></span>
+            <span>{{ row.time }}</span>
+            <span><b class="incident-pill" [ngClass]="row.tone">{{ row.type }}</b></span>
+            <span>{{ row.camera }}</span>
+            <span>{{ row.location }}</span>
+            <span><b class="severity" [ngClass]="row.severity.toLowerCase()">{{ row.severity }}</b></span>
+            <span><b class="status" [ngClass]="row.status.toLowerCase()">{{ row.status }}</b></span>
+            <span>{{ row.confidence }}</span>
+          </div>
+        </div>
+      </article>
+
+      <section class="analytics-grid">
+        <article class="panel trend-card">
+          <div class="panel-head"><h2>Incident Trend (Today)</h2></div>
+          <div class="trend-chart">
+            <i style="--x: 0; --y: 80"></i><i style="--x: 12; --y: 55"></i><i style="--x: 24; --y: 65"></i><i style="--x: 36; --y: 35"></i><i style="--x: 48; --y: 28"></i><i style="--x: 60; --y: 48"></i><i style="--x: 72; --y: 40"></i><i style="--x: 84; --y: 62"></i><i style="--x: 96; --y: 44"></i>
+            <strong>10:00 AM<br /><span>23 Incidents</span></strong>
+          </div>
+        </article>
+
+        <article class="panel type-card">
+          <div class="panel-head"><h2>Incidents by Type</h2></div>
+          <div class="donut-layout">
+            <div class="type-donut"><strong>346</strong><span>Total</span></div>
+            <ul>
+              <li *ngFor="let item of incidentTypes"><b [style.background]="item.color"></b>{{ item.label }} <span>{{ item.value }}%</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="panel heatmap-card">
+          <div class="panel-head"><h2>Heatmap (Incidents)</h2></div>
+          <div class="heatmap"><b></b><i></i><span></span><em>High</em><small>Low</small></div>
+        </article>
+
+        <article class="panel model-card">
+          <div class="panel-head"><h2>AI Model Performance</h2></div>
+          <div class="accuracy-ring"><strong>98.7%</strong><span>Accuracy</span></div>
+          <dl><div><dt>Precision</dt><dd>98.2%</dd></div><div><dt>Recall</dt><dd>97.3%</dd></div><div><dt>F1 Score</dt><dd>97.7%</dd></div></dl>
+        </article>
+
+        <article class="panel status-card">
+          <div class="panel-head"><h2>Camera Status</h2></div>
+          <div class="status-donut"><strong>128</strong><span>Total</span></div>
+          <ul>
+            <li *ngFor="let item of cameraStatus"><b [style.background]="item.color"></b>{{ item.label }} <span>{{ item.value }}</span></li>
+          </ul>
+        </article>
+      </section>
+
+    </section>
+
+    <section *ngIf="activeSection === 'table'" class="table-view">
+      <article class="table-card full">
+        <div class="table-toolbar">
+          <h2>Incident Table</h2>
+          <div>
+            <button type="button">Export</button>
+            <button type="button">Filters</button>
+          </div>
+        </div>
+        <div class="incident-table wide">
+          <div class="incident-row head">
+            <span>#</span><span>Evidence</span><span>Time</span><span>Incident Type</span><span>Camera</span><span>Location</span><span>Severity</span><span>Status</span><span>AI Confidence</span><span>Action</span>
+          </div>
+          <div class="incident-row" *ngFor="let row of incidents">
+            <span>{{ row.id }}</span>
+            <span class="thumb"><span class="evidence-dot" [ngClass]="row.tone"></span></span>
+            <span>{{ row.time }}</span>
+            <span><b class="incident-pill" [ngClass]="row.tone">{{ row.type }}</b></span>
+            <span>{{ row.camera }}</span>
+            <span>{{ row.location }}</span>
+            <span><b class="severity" [ngClass]="row.severity.toLowerCase()">{{ row.severity }}</b></span>
+            <span><b class="status" [ngClass]="row.status.toLowerCase()">{{ row.status }}</b></span>
+            <span>{{ row.confidence }}</span>
+            <span><button type="button">View</button><button type="button">Clip</button></span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section *ngIf="activeSection === 'reports'" class="reports-view">
+      <article class="report-form-card">
+        <header class="report-form-head">
+          <span class="report-head-icon" aria-hidden="true"></span>
+          <h2>{{ selectedReport.title }}</h2>
+          <label class="report-type-control">
+            <span>Report Type</span>
+            <select [value]="selectedReportIndex" (change)="setReport($any($event.target).value)">
+              <option *ngFor="let report of reports; let i = index" [value]="i">{{ report.title }}</option>
+            </select>
+          </label>
+        </header>
+
+        <div class="report-form-body">
+          <p>{{ selectedReport.description }}</p>
+
+          <div class="report-field-grid">
+            <label *ngFor="let parameter of selectedReport.parameters">
+              <span>{{ parameter.label }}</span>
+              <select *ngIf="parameter.type === 'select'; else reportInput" [value]="parameter.value">
+                <option *ngFor="let option of parameter.options" [value]="option">{{ option }}</option>
+              </select>
+              <ng-template #reportInput>
+                <input [type]="parameter.type" [value]="parameter.value" [attr.step]="parameter.type === 'time' ? 1 : null" />
+              </ng-template>
+            </label>
+          </div>
+
+          <div class="report-export-row">
+            <button *ngFor="let exportType of selectedReport.exports" [ngClass]="exportType.toLowerCase()" type="button">{{ exportType }}</button>
+          </div>
+
+          <button class="report-reset" type="button">Clear Filters</button>
+        </div>
+      </article>
+    </section>
+  </section>
+</main>

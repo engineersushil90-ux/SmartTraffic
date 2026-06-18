@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Vie
 import { CommonModule } from '@angular/common';
 import { MapViewComponent } from './map-view.component/map-view.component';
 import { ATCCComponent } from '../atcc/atcc.component';
+import { VIDSComponent, VidsSection } from '../vids/vids.component';
 import { DashboardDataService, MenuItem } from '../../services/dashboard-data.service';
 import { AtccSection } from '../../services/atcc-data.service';
 
@@ -69,6 +70,7 @@ interface SystemHealthRow {
     CommonModule,
     MapViewComponent,
     ATCCComponent,
+    VIDSComponent,
   ],
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
@@ -107,6 +109,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
 
   activeBody = 'dashboard';
   activeAtccSection: AtccSection = 'visualization';
+  activeVidsSection: VidsSection = 'visualization';
   expandedMenu: string | null = null;
   activeTopTab = 'Dashboard';
   systemHealthUpdatedAt = '';
@@ -176,13 +179,23 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     this.activeBody = item.route;
-    this.activeTopTab = 'ATCC';
-
     if (item.route.startsWith('atcc/')) {
       const section = item.route.split('/')[1] as AtccSection | undefined;
       this.activeAtccSection = section ?? 'visualization';
+      this.activeTopTab = 'ATCC';
       this.expandedMenu = 'ATCC';
+      return;
     }
+
+    if (item.route.startsWith('vids/')) {
+      const section = item.route.split('/')[1] as VidsSection | undefined;
+      this.activeVidsSection = section ?? 'visualization';
+      this.activeTopTab = 'VIDS';
+      this.expandedMenu = 'VIDS';
+      return;
+    }
+
+    this.activeTopTab = item.label;
   }
 
   hasActiveLeaf(item: MenuItem): boolean {

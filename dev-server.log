@@ -1,0 +1,517 @@
+
+> smarttraffic@0.0.0 start
+> ng serve --host 127.0.0.1 --port 4200
+
+[33m>[39m Building...
+[32m√[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m         [2m | [22m[36m385.70 kB[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m       [2m | [22m [36m27.18 kB[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m[1m412.88 kB[22m
+
+Application bundle generation complete. [1.740 seconds] - 2026-06-18T06:10:04.394Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+[2m11:40:04 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m Re-optimizing dependencies because vite config has changed
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m4200[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.334 seconds] - 2026-06-18T06:17:36.139Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2008: Could not find template file './vids.component.html'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/vids/vids.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./vids.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.002 seconds] - 2026-06-18T06:18:44.056Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2008: Could not find template file './vids.component.html'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/vids/vids.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./vids.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.381 seconds] - 2026-06-18T06:19:56.348Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.351 seconds] - 2026-06-18T06:20:13.533Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.319 seconds] - 2026-06-18T06:21:07.162Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.239 seconds] - 2026-06-18T06:21:19.173Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.350 seconds] - 2026-06-18T06:21:35.979Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.353 seconds] - 2026-06-18T06:26:19.825Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.328 seconds] - 2026-06-18T06:26:39.107Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.221 seconds] - 2026-06-18T06:28:26.158Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.297 seconds] - 2026-06-18T06:28:43.494Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.305 seconds] - 2026-06-18T06:29:02.267Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.565 seconds] - 2026-06-18T06:36:31.133Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.318 seconds] - 2026-06-18T06:36:49.626Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.267 seconds] - 2026-06-18T06:37:03.621Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.418 seconds] - 2026-06-18T06:44:24.336Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.316 seconds] - 2026-06-18T06:48:18.238Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.303 seconds] - 2026-06-18T06:50:06.560Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.446 seconds] - 2026-06-18T06:51:21.699Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.289 seconds] - 2026-06-18T06:52:42.819Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.129 seconds] - 2026-06-18T06:52:52.414Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.159 seconds] - 2026-06-18T07:01:23.105Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.806 seconds] - 2026-06-18T07:02:04.050Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.297 seconds] - 2026-06-18T07:05:08.309Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.298 seconds] - 2026-06-18T07:12:22.641Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.202 seconds] - 2026-06-18T07:12:44.979Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.304 seconds] - 2026-06-18T07:13:25.377Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.752 seconds] - 2026-06-18T07:32:00.151Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.013 seconds] - 2026-06-18T07:32:26.228Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.760 seconds] - 2026-06-18T07:34:07.075Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.470 seconds] - 2026-06-18T07:34:39.532Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.358 seconds] - 2026-06-18T07:39:28.323Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.359 seconds] - 2026-06-18T07:42:13.304Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.627 seconds] - 2026-06-18T07:42:50.460Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.308 seconds] - 2026-06-18T07:45:46.566Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.272 seconds] - 2026-06-18T07:46:51.987Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.252 seconds] - 2026-06-18T07:48:43.198Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.598 seconds] - 2026-06-18T07:49:12.160Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.163 seconds] - 2026-06-18T07:49:42.387Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.346 seconds] - 2026-06-18T07:52:21.401Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.324 seconds] - 2026-06-18T07:53:05.879Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.273 seconds] - 2026-06-18T07:56:44.379Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [1.425 seconds] - 2026-06-18T07:57:40.891Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.304 seconds] - 2026-06-18T07:58:15.751Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2012: Component imports must be standalone components, directives, pipes, or must be NgModules.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/components/dashboard/dashboard.component.ts:73:4:
+[37m      73 │     [32mVIDSComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~[0m
+
+[39m[22m

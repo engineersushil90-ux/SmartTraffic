@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'atcc', component: ATCCComponent },
   { path: 'atcc/:section', component: ATCCComponent },
   { path: 'vids', component: VIDSComponent },
+  { path: 'vids/:section', component: VIDSComponent },
   { path: 'speed-violation', component: SpeedViolationComponent },
   { path: 'device-map', component: DeviceStatusMapComponent },
   { path: 'device-overview', component: DeviceStatusOverviewComponent },

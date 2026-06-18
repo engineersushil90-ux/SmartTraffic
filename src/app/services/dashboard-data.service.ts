@@ -129,7 +129,15 @@ export class DashboardDataService {
               { icon: '', label: 'Reports', route: 'atcc/reports' },
             ],
           },
-          { icon: '', label: 'VIDS', route: 'vids' },
+          {
+            icon: '',
+            label: 'VIDS',
+            children: [
+              { icon: '', label: 'Visualization', route: 'vids/visualization' },
+              { icon: '', label: 'Table', route: 'vids/table' },
+              { icon: '', label: 'Reports', route: 'vids/reports' },
+            ],
+          },
           { icon: '', label: 'VMS', route: 'vms' },
           { icon: '', label: 'MET', route: 'met' },
           { icon: '', label: 'VSDS', route: 'vsds' },

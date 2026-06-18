@@ -12,6 +12,7 @@ export const routes: Routes = [
   { path: '', component: DashboardComponent },
   { path: 'atcc', component: ATCCComponent },
   { path: 'vids', component: VIDSComponent },
+  { path: 'vids/:section', component: VIDSComponent },
   { path: 'speed-violation', component: SpeedViolationComponent },
   { path: 'device-map', component: DeviceStatusMapComponent },
   { path: 'device-overview', component: DeviceStatusOverviewComponent },

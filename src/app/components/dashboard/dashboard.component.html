@@ -59,6 +59,10 @@
       <app-atcc [embedded]="true" [section]="activeAtccSection"></app-atcc>
     </ng-container>
 
+    <ng-container *ngIf="activeBody !== '' && activeBody.startsWith('vids')">
+      <app-vids [embedded]="true" [section]="activeVidsSection"></app-vids>
+    </ng-container>
+
     <ng-container *ngIf="activeBody === 'system-health'">
       <section class="system-health-page" aria-label="System health">
         <div class="health-page-head">
